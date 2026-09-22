@@ -1,5 +1,5 @@
 {
-  "version": 5,
+  "version": 6,
   "minAppVersion": "1.0.0",
   "updatedAt": "2026-09-22",
   "platforms": {
@@ -140,8 +140,17 @@
       "allow": [],
       "blockRequests": [
         "*://*.doubleclick.net/*",
+        "*://*.google.com/pagead/*",
+        "*://*.googleadservices.com/*",
         "*://*.googlesyndication.com/*",
-        "*://*.googleadservices.com/*"
+        "*://*.youtube.com/api/stats/ads*",
+        "*://*.youtube.com/get_midroll_*",
+        "*://*.youtube.com/pagead/*",
+        "*://*.youtube.com/pcs/activeview*",
+        "*://*.youtube.com/ptracking*",
+        "*://*.youtube.com/youtubei/v1/player/ad_break*",
+        "*://googleads.g.doubleclick.net/*",
+        "*://static.doubleclick.net/*"
       ],
       "toggles": {
         "shorts": {
@@ -191,13 +200,38 @@
             "ytm-comments-entry-point-header-renderer",
             "ytm-item-section-renderer[section-identifier='comments-entry-point']"
           ]
+        },
+        "ads": {
+          "label": "Hide ads",
+          "detail": "Blocks ad requests, removes ad breaks from the player, and hides promoted videos.",
+          "default": true,
+          "css": [
+            "ytm-promoted-video-renderer",
+            "ytm-promoted-sparkles-web-renderer",
+            "ytm-promoted-sparkles-text-search-renderer",
+            "ytm-companion-slot",
+            "ytm-ad-slot-renderer",
+            "ytm-in-feed-ad-layout-renderer",
+            "ytm-video-masthead-ad-v3-renderer",
+            "ytm-statement-banner-renderer",
+            "ytm-brand-video-shelf-renderer",
+            "ytm-brand-video-singleton-renderer",
+            ".ytp-ad-overlay-container",
+            ".ytp-ad-text-overlay",
+            "ytm-item-section-renderer:has(> lazy-list > ytm-ad-slot-renderer)",
+            "ytm-search ytm-item-section-renderer:has(ytm-promoted-sparkles-web-renderer)"
+          ]
         }
       },
       "js": [
         "noAutoplayNext",
         "killInstallBanner",
         "oneVideoOnly",
-        "ytSignInHint"
+        "ytSignInHint",
+        "ytAdSkip"
+      ],
+      "jsAtStart": [
+        "ytAdPrune"
       ]
     }
   },
@@ -205,6 +239,8 @@
     "killInstallBanner": "// Remove \"Open in app\" / \"Use the app\" prompts on Instagram and YouTube mobile web.\n(function () {\n  const PHRASES = ['Open in app', 'Open app', 'Open App', 'Use the app', 'Use app', 'Open Instagram', 'Get the app', 'Get app'];\n  // Whole overlays/dialogs: hide the element itself.\n  const DIALOGS = [\n    'ytm-mealbar-promo-renderer',\n    'ytm-upsell-dialog-renderer',\n    '.upsell-dialog',\n    'ytm-app-upsell-renderer',\n  ];\n  // App-store / deep links: hide just the button wrapping them, never the bar they sit in.\n  const LINKS = [\n    'a[href^=\"intent://\"]',\n    'a[href*=\"apps.apple.com\"]',\n    'a[href*=\"itunes.apple.com\"]',\n    'a[href*=\"play.google.com/store\"]',\n    'a[href*=\"redirect_app_store_ios\"]',\n    'a[href^=\"instagram://\"]',\n    'a[href^=\"youtube://\"]',\n    'a[href^=\"vnd.youtube\"]',\n  ];\n  function hide(el) {\n    if (!el || el.__foBanner) return;\n    el.__foBanner = true;\n    el.style.setProperty('display', 'none', 'important');\n  }\n  function buttonShell(el) {\n    return el.closest('ytm-button-renderer, button, [role=\"button\"]') || el;\n  }\n  function sweep() {\n    for (const sel of DIALOGS) document.querySelectorAll(sel).forEach(hide);\n    for (const sel of LINKS) document.querySelectorAll(sel).forEach((el) => hide(buttonShell(el)));\n    document.querySelectorAll('button, a, div[role=\"button\"]').forEach((el) => {\n      if (el.__foChecked) return;\n      const t = (el.textContent || '').trim();\n      if (t.length > 40) return;\n      el.__foChecked = true;\n      if (PHRASES.some((p) => t === p)) hide(buttonShell(el));\n    });\n  }\n  window.__feedoff && window.__feedoff.onSweep(sweep);\n  sweep();\n})();\n",
     "noAutoplayNext": "// YouTube: pause when a video ends and keep the Autoplay toggle off.\n(function () {\n  if (!/youtube\\.com$/.test(location.hostname)) return;\n  function killAutonav() {\n    document.querySelectorAll('.ytm-autonav-toggle-button-container[aria-pressed=\"true\"], button[aria-label*=\"Autoplay is on\"]').forEach((b) => {\n      try { b.click(); } catch (_) {}\n    });\n  }\n  function hook(video) {\n    if (video.__foHooked) return;\n    video.__foHooked = true;\n    video.addEventListener('ended', () => {\n      try { video.pause(); } catch (_) {}\n      killAutonav();\n    });\n  }\n  function sweep() {\n    document.querySelectorAll('video').forEach(hook);\n    killAutonav();\n  }\n  window.__feedoff && window.__feedoff.onSweep(sweep);\n  sweep();\n})();\n",
     "oneVideoOnly": "// On a single reel/short page (/reel/ID or /shorts/ID), watch that one video only:\n// block the vertical swipe that loads the next one.\n(function () {\n  const RX = /^\\/(reel|shorts)\\/[A-Za-z0-9_-]+/;\n  function onSingle() { return RX.test(location.pathname); }\n  function idOf(p) { const m = RX.exec(p); return m ? m[0] : null; }\n  let startId = idOf(location.pathname);\n\n  function block(e) {\n    if (!onSingle()) return;\n    // Let taps and horizontal drags through; stop vertical drags that page to the next video.\n    if (e.type === 'touchmove' || e.type === 'wheel') {\n      e.stopImmediatePropagation();\n      e.preventDefault();\n    }\n  }\n  document.addEventListener('touchmove', block, { capture: true, passive: false });\n  document.addEventListener('wheel', block, { capture: true, passive: false });\n\n  // If the site still advances via pushState, step back to the video we opened.\n  const origPush = history.pushState.bind(history);\n  const origReplace = history.replaceState.bind(history);\n  function guard(url) {\n    try {\n      const p = new URL(url, location.href).pathname;\n      const next = idOf(p);\n      if (startId && next && next !== startId) return false;\n      if (!startId) startId = next;\n    } catch (_) {}\n    return true;\n  }\n  history.pushState = function (s, t, url) { if (url && !guard(url)) return; return origPush(s, t, url); };\n  history.replaceState = function (s, t, url) { if (url && !guard(url)) return; return origReplace(s, t, url); };\n  window.addEventListener('popstate', () => { startId = idOf(location.pathname); });\n})();\n",
+    "ytAdPrune": "// YouTube: remove ad slots from the player data before the player ever sees them.\n// Runs at document start. Gated by the \"ads\" toggle via window.__feedoff.enabled.\n(function () {\n  if (!/youtube\\.com$/.test(location.hostname)) return;\n  var FO = window.__feedoff;\n  function on() { return !FO || !FO.enabled || FO.enabled.indexOf('ads') !== -1; }\n  var KEYS = ['adPlacements', 'playerAds', 'adSlots', 'adBreakHeartbeatParams', 'adBreakParams', 'adParams'];\n  function prune(o) {\n    if (!o || typeof o !== 'object') return o;\n    try {\n      for (var i = 0; i < KEYS.length; i++) if (KEYS[i] in o) delete o[KEYS[i]];\n      if (o.playerResponse) prune(o.playerResponse);\n      if (o.playerConfig && o.playerConfig.daiConfig) delete o.playerConfig.daiConfig;\n    } catch (e) {}\n    return o;\n  }\n  var origParse = JSON.parse;\n  JSON.parse = function () { var r = origParse.apply(this, arguments); return on() ? prune(r) : r; };\n  if (window.Response && Response.prototype.json) {\n    var origJson = Response.prototype.json;\n    Response.prototype.json = function () {\n      return origJson.apply(this, arguments).then(function (r) { return on() ? prune(r) : r; });\n    };\n  }\n  var initial;\n  try {\n    Object.defineProperty(window, 'ytInitialPlayerResponse', {\n      configurable: true,\n      get: function () { return initial; },\n      set: function (v) { initial = on() ? prune(v) : v; },\n    });\n  } catch (e) {}\n})();\n",
+    "ytAdSkip": "// YouTube: if an ad still plays, mute it and jump to its end; click Skip/close when offered.\n(function () {\n  if (!/youtube\\.com$/.test(location.hostname)) return;\n  var FO = window.__feedoff;\n  function on() { return !FO || !FO.enabled || FO.enabled.indexOf('ads') !== -1; }\n  var wasMuted = null;\n  function tick() {\n    if (!on()) return;\n    var ad = document.querySelector('.ad-showing, .ad-interrupting, .ytp-ad-player-overlay, ytm-player-ad-overlay, .ytp-ad-preview-container');\n    var v = document.querySelector('video');\n    if (ad && v) {\n      if (wasMuted === null) wasMuted = v.muted;\n      v.muted = true;\n      if (isFinite(v.duration) && v.duration > 0) { try { v.currentTime = v.duration; } catch (e) {} }\n      try { v.playbackRate = 16; } catch (e) {}\n    } else if (v && wasMuted !== null) {\n      v.muted = wasMuted; wasMuted = null;\n      try { if (v.playbackRate === 16) v.playbackRate = 1; } catch (e) {}\n    }\n    var skip = document.querySelector('.ytp-ad-skip-button, .ytp-ad-skip-button-modern, .ytp-skip-ad-button, button.ytm-skip-ad-button, [class*=\"skip-button\"], [id*=\"skip-button\"]');\n    if (skip) { try { skip.click(); } catch (e) {} }\n    var close = document.querySelector('.ytp-ad-overlay-close-button, .ytm-ad-overlay-close');\n    if (close) { try { close.click(); } catch (e) {} }\n  }\n  setInterval(tick, 400);\n  FO && FO.onSweep(tick);\n})();\n",
     "ytSignInHint": "// YouTube: the Subscriptions page is empty when signed out. Show a hint instead of a blank screen.\n(function () {\n  if (!/youtube\\.com$/.test(location.hostname)) return;\n  var ID = '__feedoff_yt_hint';\n  function hasContent() {\n    return !!document.querySelector('ytm-section-list-renderer, ytm-item-section-renderer, ytm-rich-grid-renderer, ytm-watch, ytm-search');\n  }\n  function signedIn() {\n    return !!document.querySelector('ytm-profile-icon img, img.avatar, [aria-label*=\"Account\"] img');\n  }\n  function show() {\n    if (document.getElementById(ID)) return;\n    var box = document.createElement('div');\n    box.id = ID;\n    box.style.cssText = 'position:fixed;left:16px;right:16px;top:45%;transform:translateY(-50%);padding:22px 18px;border-radius:16px;background:rgba(127,127,127,.12);text-align:center;font:15px/1.45 -apple-system,system-ui,sans-serif;color:inherit;z-index:2147483000;';\n    var t = document.createElement('div'); t.style.cssText = 'font-weight:700;font-size:17px;margin-bottom:6px;'; t.textContent = 'Sign in to see your subscriptions';\n    var s = document.createElement('div'); s.style.cssText = 'opacity:.75;margin-bottom:14px;'; s.textContent = 'YouTube Lite opens on Subscriptions instead of the Home feed. Sign in once and it stays signed in.';\n    var a = document.createElement('a');\n    a.href = 'https://accounts.google.com/ServiceLogin?service=youtube&continue=' + encodeURIComponent('https://m.youtube.com/feed/subscriptions');\n    a.textContent = 'Sign in';\n    a.style.cssText = 'display:inline-block;padding:10px 22px;border-radius:999px;background:#FF6B4A;color:#fff;font-weight:600;text-decoration:none;';\n    box.appendChild(t); box.appendChild(s); box.appendChild(a);\n    document.body.appendChild(box);\n  }\n  function hide() { var b = document.getElementById(ID); if (b) b.remove(); }\n  function check() {\n    var onSubs = /^\\/feed\\/subscriptions/.test(location.pathname);\n    if (onSubs && !hasContent() && !signedIn()) show(); else hide();\n  }\n  setTimeout(check, 2500);\n  window.__feedoff && window.__feedoff.onSweep(check);\n})();\n"
   }
 }

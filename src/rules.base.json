@@ -1,5 +1,5 @@
 {
-  "version": 5,
+  "version": 6,
   "minAppVersion": "1.0.0",
   "updatedAt": "2026-09-22",
   "platforms": {
@@ -140,8 +140,17 @@
       "allow": [],
       "blockRequests": [
         "*://*.doubleclick.net/*",
+        "*://*.google.com/pagead/*",
+        "*://*.googleadservices.com/*",
         "*://*.googlesyndication.com/*",
-        "*://*.googleadservices.com/*"
+        "*://*.youtube.com/api/stats/ads*",
+        "*://*.youtube.com/get_midroll_*",
+        "*://*.youtube.com/pagead/*",
+        "*://*.youtube.com/pcs/activeview*",
+        "*://*.youtube.com/ptracking*",
+        "*://*.youtube.com/youtubei/v1/player/ad_break*",
+        "*://googleads.g.doubleclick.net/*",
+        "*://static.doubleclick.net/*"
       ],
       "toggles": {
         "shorts": {
@@ -191,13 +200,38 @@
             "ytm-comments-entry-point-header-renderer",
             "ytm-item-section-renderer[section-identifier='comments-entry-point']"
           ]
+        },
+        "ads": {
+          "label": "Hide ads",
+          "detail": "Blocks ad requests, removes ad breaks from the player, and hides promoted videos.",
+          "default": true,
+          "css": [
+            "ytm-promoted-video-renderer",
+            "ytm-promoted-sparkles-web-renderer",
+            "ytm-promoted-sparkles-text-search-renderer",
+            "ytm-companion-slot",
+            "ytm-ad-slot-renderer",
+            "ytm-in-feed-ad-layout-renderer",
+            "ytm-video-masthead-ad-v3-renderer",
+            "ytm-statement-banner-renderer",
+            "ytm-brand-video-shelf-renderer",
+            "ytm-brand-video-singleton-renderer",
+            ".ytp-ad-overlay-container",
+            ".ytp-ad-text-overlay",
+            "ytm-item-section-renderer:has(> lazy-list > ytm-ad-slot-renderer)",
+            "ytm-search ytm-item-section-renderer:has(ytm-promoted-sparkles-web-renderer)"
+          ]
         }
       },
       "js": [
         "noAutoplayNext",
         "killInstallBanner",
         "oneVideoOnly",
-        "ytSignInHint"
+        "ytSignInHint",
+        "ytAdSkip"
+      ],
+      "jsAtStart": [
+        "ytAdPrune"
       ]
     }
   }
