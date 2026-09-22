@@ -1,5 +1,5 @@
 {
-  "version": 6,
+  "version": 7,
   "minAppVersion": "1.0.0",
   "updatedAt": "2026-09-22",
   "platforms": {
@@ -232,6 +232,115 @@
       ],
       "jsAtStart": [
         "ytAdPrune"
+      ]
+    },
+    "x": {
+      "name": "X",
+      "home": "https://x.com/home",
+      "hosts": [
+        "x.com",
+        "twitter.com",
+        "twimg.com",
+        "t.co"
+      ],
+      "redirects": [
+        {
+          "match": "^/i/trending",
+          "to": "/home",
+          "toggle": "trending"
+        },
+        {
+          "match": "^/explore/tabs",
+          "to": "/explore",
+          "toggle": "trending"
+        },
+        {
+          "match": "^/i/grok",
+          "to": "/home",
+          "toggle": "extras"
+        },
+        {
+          "match": "^/i/premium",
+          "to": "/home",
+          "toggle": "extras"
+        },
+        {
+          "match": "^/i/videos",
+          "to": "/home",
+          "toggle": "foryou"
+        }
+      ],
+      "allow": [],
+      "blockRequests": [
+        "*://*.doubleclick.net/*",
+        "*://ads-api.x.com/*",
+        "*://ads-api.twitter.com/*",
+        "*://*.ads-twitter.com/*"
+      ],
+      "toggles": {
+        "foryou": {
+          "label": "Following only",
+          "detail": "Home opens on the Following tab instead of For You, and the video feed is hidden.",
+          "default": true,
+          "css": [
+            "[data-testid='primaryColumn'] [role='tablist'] > div:first-child",
+            "main [role='tablist'] [role='presentation']:first-child",
+            "a[href='/i/videos']",
+            "a[href='/i/videos'] + *"
+          ]
+        },
+        "trending": {
+          "label": "Hide trends & Who to follow",
+          "detail": "Removes trending topics and suggested accounts from Home and Explore.",
+          "default": true,
+          "css": [
+            "[aria-label='Timeline: Trending now']",
+            "[data-testid='trend']",
+            "div[data-testid='cellInnerDiv']:has([data-testid='trend'])",
+            "[aria-label='Who to follow']",
+            "div[data-testid='cellInnerDiv']:has([data-testid='UserCell'])",
+            "div[data-testid='cellInnerDiv']:has(a[href*='/i/connect_people'])",
+            "div[data-testid='cellInnerDiv']:has(a[href*='/explore/tabs'])",
+            "[data-testid='sidebarColumn']"
+          ]
+        },
+        "promoted": {
+          "label": "Hide promoted posts",
+          "detail": "Removes ads from the timeline.",
+          "default": true,
+          "css": [
+            "div[data-testid='cellInnerDiv']:has([data-testid='placementTracking'])",
+            "article:has([data-testid='placementTracking'])"
+          ],
+          "hideIfText": [
+            {
+              "selector": "div[data-testid='cellInnerDiv']",
+              "contains": [
+                "Promoted"
+              ],
+              "maxTextLength": 4000
+            }
+          ]
+        },
+        "extras": {
+          "label": "Hide Grok, Communities & Premium",
+          "detail": "Removes the Grok, Communities, Premium and monetisation entries.",
+          "default": true,
+          "css": [
+            "a[href='/i/grok']",
+            "a[href*='/i/grok']",
+            "a[href*='/communities']",
+            "a[href*='/i/premium']",
+            "a[href*='/i/verified-orgs']",
+            "a[href*='/i/monetization']",
+            "a[href*='/jobs']",
+            "div[data-testid='cellInnerDiv']:has(a[href*='/i/premium'])"
+          ]
+        }
+      },
+      "js": [
+        "killInstallBanner",
+        "xFollowingOnly"
       ]
     }
   }
