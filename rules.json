@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "minAppVersion": "1.0.0",
   "updatedAt": "2026-09-22",
   "platforms": {
@@ -73,7 +73,7 @@
               ],
               "maxTextLength": 2500,
               "placeholder": {
-                "title": "Suggested posts hidden by FeedOff",
+                "title": "Suggested post hidden by FeedOff",
                 "body": ""
               }
             }
