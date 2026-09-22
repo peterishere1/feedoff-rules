@@ -24,6 +24,8 @@
     'a[href*="onelink.me"]',
     'a[href^="reddit://"]',
     'a[href^="twitter://"]',
+    'a[href^="linkedin://"]',
+    'a[href*="app.adjust.com"]',
   ];
   function hide(el) {
     if (!el || el.__foBanner) return;

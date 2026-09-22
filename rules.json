@@ -1,5 +1,5 @@
 {
-  "version": 8,
+  "version": 9,
   "minAppVersion": "1.0.0",
   "updatedAt": "2026-09-22",
   "platforms": {
@@ -438,10 +438,109 @@
         "killInstallBanner",
         "redditHome"
       ]
+    },
+    "linkedin": {
+      "name": "LinkedIn",
+      "home": "https://www.linkedin.com/messaging/",
+      "hosts": [
+        "linkedin.com",
+        "licdn.com"
+      ],
+      "redirects": [
+        {
+          "match": "^/mynetwork/discover",
+          "to": "/messaging/",
+          "toggle": "pymk"
+        },
+        {
+          "match": "^/news(/|$)",
+          "to": "/messaging/",
+          "toggle": "news"
+        },
+        {
+          "match": "^/feed/hashtag",
+          "to": "/messaging/",
+          "toggle": "homefeed"
+        }
+      ],
+      "allow": [],
+      "blockRequests": [
+        "*://*.doubleclick.net/*",
+        "*://*.linkedin.com/li/track*",
+        "*://px.ads.linkedin.com/*",
+        "*://*.linkedin.com/pixel/*"
+      ],
+      "toggles": {
+        "homefeed": {
+          "label": "Hide Home feed",
+          "detail": "The Home tab shows shortcuts to Messages, Notifications and Jobs instead of the feed.",
+          "default": true,
+          "css": [
+            "html.feedoff-home main",
+            "html.feedoff-home .scaffold-finite-scroll",
+            "html.feedoff-home .feed-container-theme",
+            "html.feedoff-home [data-finite-scroll-hotkey-item]",
+            "html.feedoff-home .share-box-feed-entry__wrapper"
+          ]
+        },
+        "pymk": {
+          "label": "Hide People you may know",
+          "detail": "Removes suggested connections and follow prompts.",
+          "default": true,
+          "css": [
+            ".discover-pymk",
+            ".mn-pymk-list",
+            "[data-view-name='pymk']",
+            "[data-view-name='people-you-may-know']",
+            ".feed-follows-module",
+            ".pymk-card",
+            "section.mn-discovery-cohort",
+            "[data-view-name='cohort-section']"
+          ]
+        },
+        "news": {
+          "label": "Hide news",
+          "detail": "Removes LinkedIn News and trending stories.",
+          "default": true,
+          "css": [
+            ".news-module",
+            "#feed-news-module",
+            "[data-view-name='news-module']",
+            "section[aria-label*='LinkedIn News']",
+            "[data-view-name='trending-news']"
+          ]
+        },
+        "ads": {
+          "label": "Hide ads & promoted posts",
+          "detail": "Removes sponsored content.",
+          "default": true,
+          "css": [
+            ".ad-banner-container",
+            ".feed-shared-update-v2--sponsored",
+            "[data-id*='sponsored']",
+            "[data-view-name='sponsored-update']",
+            "[data-view-name='feed-sponsored-update']"
+          ],
+          "hideIfText": [
+            {
+              "selector": "[data-id^='urn:li:activity'], [data-urn^='urn:li:activity'], [data-view-name='feed-full-update']",
+              "contains": [
+                "Promoted"
+              ],
+              "maxTextLength": 3000
+            }
+          ]
+        }
+      },
+      "js": [
+        "killInstallBanner",
+        "linkedinHome"
+      ]
     }
   },
   "jsLibrary": {
-    "killInstallBanner": "// Remove \"Open in app\" / \"Use the app\" prompts on Instagram and YouTube mobile web.\n(function () {\n  const PHRASES = ['Open in app', 'Open app', 'Open App', 'Use the app', 'Use app', 'Open Instagram', 'Get the app', 'Get app'];\n  // Whole overlays/dialogs: hide the element itself.\n  const DIALOGS = [\n    'ytm-mealbar-promo-renderer',\n    'ytm-upsell-dialog-renderer',\n    '.upsell-dialog',\n    'ytm-app-upsell-renderer',\n    'configured-xpromo-modal',\n    'xpromo-nsfw-blocking-modal',\n  ];\n  // App-store / deep links: hide just the button wrapping them, never the bar they sit in.\n  const LINKS = [\n    'a[href^=\"intent://\"]',\n    'a[href*=\"apps.apple.com\"]',\n    'a[href*=\"itunes.apple.com\"]',\n    'a[href*=\"play.google.com/store\"]',\n    'a[href*=\"redirect_app_store_ios\"]',\n    'a[href^=\"instagram://\"]',\n    'a[href^=\"youtube://\"]',\n    'a[href^=\"vnd.youtube\"]',\n    'a[href*=\"applink.reddit.com\"]',\n    'a[href*=\"onelink.me\"]',\n    'a[href^=\"reddit://\"]',\n    'a[href^=\"twitter://\"]',\n  ];\n  function hide(el) {\n    if (!el || el.__foBanner) return;\n    el.__foBanner = true;\n    el.style.setProperty('display', 'none', 'important');\n  }\n  function buttonShell(el) {\n    return el.closest('ytm-button-renderer, button, [role=\"button\"]') || el;\n  }\n  function sweep() {\n    for (const sel of DIALOGS) document.querySelectorAll(sel).forEach(hide);\n    for (const sel of LINKS) document.querySelectorAll(sel).forEach((el) => hide(buttonShell(el)));\n    document.querySelectorAll('button, a, div[role=\"button\"]').forEach((el) => {\n      if (el.__foChecked) return;\n      const t = (el.textContent || '').trim();\n      if (t.length > 40) return;\n      el.__foChecked = true;\n      if (PHRASES.some((p) => t === p)) hide(buttonShell(el));\n    });\n  }\n  window.__feedoff && window.__feedoff.onSweep(sweep);\n  sweep();\n})();\n",
+    "killInstallBanner": "// Remove \"Open in app\" / \"Use the app\" prompts on Instagram and YouTube mobile web.\n(function () {\n  const PHRASES = ['Open in app', 'Open app', 'Open App', 'Use the app', 'Use app', 'Open Instagram', 'Get the app', 'Get app'];\n  // Whole overlays/dialogs: hide the element itself.\n  const DIALOGS = [\n    'ytm-mealbar-promo-renderer',\n    'ytm-upsell-dialog-renderer',\n    '.upsell-dialog',\n    'ytm-app-upsell-renderer',\n    'configured-xpromo-modal',\n    'xpromo-nsfw-blocking-modal',\n  ];\n  // App-store / deep links: hide just the button wrapping them, never the bar they sit in.\n  const LINKS = [\n    'a[href^=\"intent://\"]',\n    'a[href*=\"apps.apple.com\"]',\n    'a[href*=\"itunes.apple.com\"]',\n    'a[href*=\"play.google.com/store\"]',\n    'a[href*=\"redirect_app_store_ios\"]',\n    'a[href^=\"instagram://\"]',\n    'a[href^=\"youtube://\"]',\n    'a[href^=\"vnd.youtube\"]',\n    'a[href*=\"applink.reddit.com\"]',\n    'a[href*=\"onelink.me\"]',\n    'a[href^=\"reddit://\"]',\n    'a[href^=\"twitter://\"]',\n    'a[href^=\"linkedin://\"]',\n    'a[href*=\"app.adjust.com\"]',\n  ];\n  function hide(el) {\n    if (!el || el.__foBanner) return;\n    el.__foBanner = true;\n    el.style.setProperty('display', 'none', 'important');\n  }\n  function buttonShell(el) {\n    return el.closest('ytm-button-renderer, button, [role=\"button\"]') || el;\n  }\n  function sweep() {\n    for (const sel of DIALOGS) document.querySelectorAll(sel).forEach(hide);\n    for (const sel of LINKS) document.querySelectorAll(sel).forEach((el) => hide(buttonShell(el)));\n    document.querySelectorAll('button, a, div[role=\"button\"]').forEach((el) => {\n      if (el.__foChecked) return;\n      const t = (el.textContent || '').trim();\n      if (t.length > 40) return;\n      el.__foChecked = true;\n      if (PHRASES.some((p) => t === p)) hide(buttonShell(el));\n    });\n  }\n  window.__feedoff && window.__feedoff.onSweep(sweep);\n  sweep();\n})();\n",
+    "linkedinHome": "// LinkedIn: mark the Home feed page so its CSS can hide the feed, and show a hint where it was.\n(function () {\n  if (!/linkedin\\.com$/.test(location.hostname)) return;\n  var FO = window.__feedoff;\n  function on() { return !FO || !FO.enabled || FO.enabled.indexOf('homefeed') !== -1; }\n  var ID = '__feedoff_li_hint';\n  function isHome() { return /^\\/(feed\\/?|)$/.test(location.pathname) || /^\\/feed\\/(update|hashtag)?\\/?$/.test(location.pathname); }\n  function apply() {\n    var home = on() && isHome();\n    document.documentElement.classList.toggle('feedoff-home', home);\n    var hint = document.getElementById(ID);\n    if (home && !hint) {\n      var box = document.createElement('div');\n      box.id = ID;\n      box.style.cssText = 'position:fixed;left:16px;right:16px;top:40%;transform:translateY(-50%);padding:22px 18px;border-radius:16px;background:rgba(127,127,127,.12);text-align:center;font:15px/1.45 -apple-system,system-ui,sans-serif;color:inherit;z-index:2147483000;';\n      var t = document.createElement('div'); t.style.cssText = 'font-weight:700;font-size:17px;margin-bottom:6px;'; t.textContent = 'Feed hidden';\n      var s = document.createElement('div'); s.style.cssText = 'opacity:.75;margin-bottom:14px;'; s.textContent = 'LinkedIn Lite is for messages, notifications, jobs and people. The feed stays off.';\n      var row = document.createElement('div'); row.style.cssText = 'display:flex;gap:8px;justify-content:center;flex-wrap:wrap;';\n      [['Messages', '/messaging/'], ['Notifications', '/notifications/'], ['Jobs', '/jobs/']].forEach(function (pair) {\n        var a = document.createElement('a'); a.href = pair[1]; a.textContent = pair[0];\n        a.style.cssText = 'display:inline-block;padding:9px 16px;border-radius:999px;background:#FF6B4A;color:#fff;font-weight:600;text-decoration:none;font-size:14px;';\n        row.appendChild(a);\n      });\n      box.appendChild(t); box.appendChild(s); box.appendChild(row);\n      document.body.appendChild(box);\n    } else if (!home && hint) {\n      hint.remove();\n    }\n  }\n  setTimeout(apply, 800);\n  FO && FO.onSweep(apply);\n  window.addEventListener('popstate', function () { setTimeout(apply, 50); });\n})();\n",
     "noAutoplayNext": "// YouTube: pause when a video ends and keep the Autoplay toggle off.\n(function () {\n  if (!/youtube\\.com$/.test(location.hostname)) return;\n  function killAutonav() {\n    document.querySelectorAll('.ytm-autonav-toggle-button-container[aria-pressed=\"true\"], button[aria-label*=\"Autoplay is on\"]').forEach((b) => {\n      try { b.click(); } catch (_) {}\n    });\n  }\n  function hook(video) {\n    if (video.__foHooked) return;\n    video.__foHooked = true;\n    video.addEventListener('ended', () => {\n      try { video.pause(); } catch (_) {}\n      killAutonav();\n    });\n  }\n  function sweep() {\n    document.querySelectorAll('video').forEach(hook);\n    killAutonav();\n  }\n  window.__feedoff && window.__feedoff.onSweep(sweep);\n  sweep();\n})();\n",
     "oneVideoOnly": "// On a single reel/short page (/reel/ID or /shorts/ID), watch that one video only:\n// block the vertical swipe that loads the next one.\n(function () {\n  const RX = /^\\/(reel|shorts)\\/[A-Za-z0-9_-]+/;\n  function onSingle() { return RX.test(location.pathname); }\n  function idOf(p) { const m = RX.exec(p); return m ? m[0] : null; }\n  let startId = idOf(location.pathname);\n\n  function block(e) {\n    if (!onSingle()) return;\n    // Let taps and horizontal drags through; stop vertical drags that page to the next video.\n    if (e.type === 'touchmove' || e.type === 'wheel') {\n      e.stopImmediatePropagation();\n      e.preventDefault();\n    }\n  }\n  document.addEventListener('touchmove', block, { capture: true, passive: false });\n  document.addEventListener('wheel', block, { capture: true, passive: false });\n\n  // If the site still advances via pushState, step back to the video we opened.\n  const origPush = history.pushState.bind(history);\n  const origReplace = history.replaceState.bind(history);\n  function guard(url) {\n    try {\n      const p = new URL(url, location.href).pathname;\n      const next = idOf(p);\n      if (startId && next && next !== startId) return false;\n      if (!startId) startId = next;\n    } catch (_) {}\n    return true;\n  }\n  history.pushState = function (s, t, url) { if (url && !guard(url)) return; return origPush(s, t, url); };\n  history.replaceState = function (s, t, url) { if (url && !guard(url)) return; return origReplace(s, t, url); };\n  window.addEventListener('popstate', () => { startId = idOf(location.pathname); });\n})();\n",
     "redditHome": "// Reddit: mark the Home / Popular / All pages so the CSS can hide their feeds, and show a hint\n// where the feed was. Subreddits you visit directly keep their posts.\n(function () {\n  if (!/reddit\\.com$/.test(location.hostname)) return;\n  var FO = window.__feedoff;\n  function on() { return !FO || !FO.enabled || FO.enabled.indexOf('homefeed') !== -1; }\n  var ID = '__feedoff_reddit_hint';\n  function isHome() { return /^\\/(r\\/(popular|all)\\/?|best\\/?)?$/.test(location.pathname) || /^\\/\\?feed=/.test(location.pathname + location.search); }\n  function apply() {\n    var home = on() && isHome();\n    document.documentElement.classList.toggle('feedoff-home', home);\n    var hint = document.getElementById(ID);\n    if (home && !hint) {\n      var box = document.createElement('div');\n      box.id = ID;\n      box.style.cssText = 'position:fixed;left:16px;right:16px;top:40%;transform:translateY(-50%);padding:22px 18px;border-radius:16px;background:rgba(127,127,127,.12);text-align:center;font:15px/1.45 -apple-system,system-ui,sans-serif;color:inherit;z-index:2147483000;pointer-events:none;';\n      var t = document.createElement('div'); t.style.cssText = 'font-weight:700;font-size:17px;margin-bottom:6px;'; t.textContent = 'Home feed hidden';\n      var s = document.createElement('div'); s.style.cssText = 'opacity:.75;'; s.textContent = 'Open the menu in the top left for your communities, or search for one. Posts inside a community show as normal.';\n      box.appendChild(t); box.appendChild(s);\n      document.body.appendChild(box);\n    } else if (!home && hint) {\n      hint.remove();\n    }\n  }\n  setTimeout(apply, 800);\n  FO && FO.onSweep(apply);\n  window.addEventListener('popstate', function () { setTimeout(apply, 50); });\n})();\n",

@@ -1,5 +1,5 @@
 {
-  "version": 8,
+  "version": 9,
   "minAppVersion": "1.0.0",
   "updatedAt": "2026-09-22",
   "platforms": {
@@ -437,6 +437,104 @@
       "js": [
         "killInstallBanner",
         "redditHome"
+      ]
+    },
+    "linkedin": {
+      "name": "LinkedIn",
+      "home": "https://www.linkedin.com/messaging/",
+      "hosts": [
+        "linkedin.com",
+        "licdn.com"
+      ],
+      "redirects": [
+        {
+          "match": "^/mynetwork/discover",
+          "to": "/messaging/",
+          "toggle": "pymk"
+        },
+        {
+          "match": "^/news(/|$)",
+          "to": "/messaging/",
+          "toggle": "news"
+        },
+        {
+          "match": "^/feed/hashtag",
+          "to": "/messaging/",
+          "toggle": "homefeed"
+        }
+      ],
+      "allow": [],
+      "blockRequests": [
+        "*://*.doubleclick.net/*",
+        "*://*.linkedin.com/li/track*",
+        "*://px.ads.linkedin.com/*",
+        "*://*.linkedin.com/pixel/*"
+      ],
+      "toggles": {
+        "homefeed": {
+          "label": "Hide Home feed",
+          "detail": "The Home tab shows shortcuts to Messages, Notifications and Jobs instead of the feed.",
+          "default": true,
+          "css": [
+            "html.feedoff-home main",
+            "html.feedoff-home .scaffold-finite-scroll",
+            "html.feedoff-home .feed-container-theme",
+            "html.feedoff-home [data-finite-scroll-hotkey-item]",
+            "html.feedoff-home .share-box-feed-entry__wrapper"
+          ]
+        },
+        "pymk": {
+          "label": "Hide People you may know",
+          "detail": "Removes suggested connections and follow prompts.",
+          "default": true,
+          "css": [
+            ".discover-pymk",
+            ".mn-pymk-list",
+            "[data-view-name='pymk']",
+            "[data-view-name='people-you-may-know']",
+            ".feed-follows-module",
+            ".pymk-card",
+            "section.mn-discovery-cohort",
+            "[data-view-name='cohort-section']"
+          ]
+        },
+        "news": {
+          "label": "Hide news",
+          "detail": "Removes LinkedIn News and trending stories.",
+          "default": true,
+          "css": [
+            ".news-module",
+            "#feed-news-module",
+            "[data-view-name='news-module']",
+            "section[aria-label*='LinkedIn News']",
+            "[data-view-name='trending-news']"
+          ]
+        },
+        "ads": {
+          "label": "Hide ads & promoted posts",
+          "detail": "Removes sponsored content.",
+          "default": true,
+          "css": [
+            ".ad-banner-container",
+            ".feed-shared-update-v2--sponsored",
+            "[data-id*='sponsored']",
+            "[data-view-name='sponsored-update']",
+            "[data-view-name='feed-sponsored-update']"
+          ],
+          "hideIfText": [
+            {
+              "selector": "[data-id^='urn:li:activity'], [data-urn^='urn:li:activity'], [data-view-name='feed-full-update']",
+              "contains": [
+                "Promoted"
+              ],
+              "maxTextLength": 3000
+            }
+          ]
+        }
+      },
+      "js": [
+        "killInstallBanner",
+        "linkedinHome"
       ]
     }
   }
