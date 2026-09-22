@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "minAppVersion": "1.0.0",
   "updatedAt": "2026-09-22",
   "platforms": {
@@ -70,7 +70,12 @@
                 "Suggested for you",
                 "Sponsored",
                 "Suggested posts"
-              ]
+              ],
+              "maxTextLength": 2500,
+              "placeholder": {
+                "title": "Suggested posts hidden by FeedOff",
+                "body": ""
+              }
             },
             {
               "selector": "main > div > div > div > div",
