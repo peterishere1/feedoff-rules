@@ -14,7 +14,7 @@
       box.id = ID;
       box.style.cssText = 'position:fixed;left:16px;right:16px;top:40%;transform:translateY(-50%);padding:22px 18px;border-radius:16px;background:rgba(127,127,127,.12);text-align:center;font:15px/1.45 -apple-system,system-ui,sans-serif;color:inherit;z-index:2147483000;';
       var t = document.createElement('div'); t.style.cssText = 'font-weight:700;font-size:17px;margin-bottom:6px;'; t.textContent = 'Feed hidden';
-      var s = document.createElement('div'); s.style.cssText = 'opacity:.75;margin-bottom:14px;'; s.textContent = 'LinkedIn Lite is for messages, notifications, jobs and people. The feed stays off.';
+      var s = document.createElement('div'); s.style.cssText = 'opacity:.75;margin-bottom:14px;'; s.textContent = 'In FeedOff, LinkedIn is for messages, notifications, jobs and people. The feed stays off.';
       var row = document.createElement('div'); row.style.cssText = 'display:flex;gap:8px;justify-content:center;flex-wrap:wrap;';
       [['Messages', '/messaging/'], ['Notifications', '/notifications/'], ['Jobs', '/jobs/']].forEach(function (pair) {
         var a = document.createElement('a'); a.href = pair[1]; a.textContent = pair[0];

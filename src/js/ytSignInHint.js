@@ -14,7 +14,7 @@
     box.id = ID;
     box.style.cssText = 'position:fixed;left:16px;right:16px;top:45%;transform:translateY(-50%);padding:22px 18px;border-radius:16px;background:rgba(127,127,127,.12);text-align:center;font:15px/1.45 -apple-system,system-ui,sans-serif;color:inherit;z-index:2147483000;';
     var t = document.createElement('div'); t.style.cssText = 'font-weight:700;font-size:17px;margin-bottom:6px;'; t.textContent = 'Sign in to see your subscriptions';
-    var s = document.createElement('div'); s.style.cssText = 'opacity:.75;margin-bottom:14px;'; s.textContent = 'YouTube Lite opens on Subscriptions instead of the Home feed. Sign in once and it stays signed in.';
+    var s = document.createElement('div'); s.style.cssText = 'opacity:.75;margin-bottom:14px;'; s.textContent = 'In FeedOff, YouTube opens on Subscriptions instead of the Home feed. Sign in once and it stays signed in.';
     var a = document.createElement('a');
     a.href = 'https://accounts.google.com/ServiceLogin?service=youtube&continue=' + encodeURIComponent('https://m.youtube.com/feed/subscriptions');
     a.textContent = 'Sign in';
