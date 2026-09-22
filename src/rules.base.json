@@ -1,5 +1,5 @@
 {
-  "version": 7,
+  "version": 8,
   "minAppVersion": "1.0.0",
   "updatedAt": "2026-09-22",
   "platforms": {
@@ -341,6 +341,102 @@
       "js": [
         "killInstallBanner",
         "xFollowingOnly"
+      ]
+    },
+    "reddit": {
+      "name": "Reddit",
+      "home": "https://www.reddit.com/",
+      "hosts": [
+        "reddit.com",
+        "redd.it",
+        "redditstatic.com",
+        "redditmedia.com"
+      ],
+      "redirects": [
+        {
+          "match": "^/r/(popular|all)(/|$)",
+          "to": "/",
+          "toggle": "homefeed"
+        },
+        {
+          "match": "^/best(/|$)",
+          "to": "/",
+          "toggle": "homefeed"
+        },
+        {
+          "match": "^/communities(/|$)",
+          "to": "/",
+          "toggle": "recommended"
+        }
+      ],
+      "allow": [],
+      "blockRequests": [
+        "*://*.doubleclick.net/*",
+        "*://alb.reddit.com/*",
+        "*://events.reddit.com/*",
+        "*://w3-reporting.reddit.com/*",
+        "*://*.redditmedia.com/ads/*",
+        "*://pixel.reddit.com/*"
+      ],
+      "toggles": {
+        "homefeed": {
+          "label": "Hide Home & Popular feeds",
+          "detail": "The front page shows nothing to scroll. Communities you open directly still show their posts.",
+          "default": true,
+          "css": [
+            "html.feedoff-home shreddit-feed",
+            "html.feedoff-home shreddit-feed-page-loading",
+            "html.feedoff-home shreddit-sort-dropdown",
+            "html.feedoff-home [data-testid='feed-sort']"
+          ]
+        },
+        "ads": {
+          "label": "Hide ads",
+          "detail": "Removes promoted posts from every feed and comment page.",
+          "default": true,
+          "css": [
+            "shreddit-ad-post",
+            "shreddit-comments-page-ad",
+            "shreddit-dynamic-ad-link",
+            "shreddit-post[promoted]",
+            "shreddit-post[promoted='true']",
+            "article:has(> shreddit-ad-post)"
+          ]
+        },
+        "recommended": {
+          "label": "Hide recommended communities",
+          "detail": "Removes suggested communities, Reddit Answers and other discovery modules.",
+          "default": true,
+          "css": [
+            "community-highlight-carousel",
+            "shreddit-recirculation",
+            "shreddit-community-recommendations",
+            "[data-testid='community-recs']",
+            "a[href*='applink.reddit.com/answers']",
+            "a[href^='/answers']",
+            "reddit-search-small a[href*='answers']",
+            "shreddit-trending-searches",
+            "[data-testid='trending-searches']"
+          ]
+        },
+        "apppromo": {
+          "label": "Hide 'Open App' prompts",
+          "detail": "Removes the banners and pop-ups pushing the Reddit app.",
+          "default": true,
+          "css": [
+            "configured-xpromo-modal",
+            "xpromo-nsfw-blocking-modal",
+            "xpromo-nsfw-blocking-modal-desktop",
+            "a[href*='applink.reddit.com']",
+            "a[href*='onelink.me']",
+            "shreddit-async-loader[bundlename*='xpromo']",
+            "[data-testid='xpromo-bottom-bar']"
+          ]
+        }
+      },
+      "js": [
+        "killInstallBanner",
+        "redditHome"
       ]
     }
   }

@@ -7,6 +7,8 @@
     'ytm-upsell-dialog-renderer',
     '.upsell-dialog',
     'ytm-app-upsell-renderer',
+    'configured-xpromo-modal',
+    'xpromo-nsfw-blocking-modal',
   ];
   // App-store / deep links: hide just the button wrapping them, never the bar they sit in.
   const LINKS = [
@@ -18,6 +20,10 @@
     'a[href^="instagram://"]',
     'a[href^="youtube://"]',
     'a[href^="vnd.youtube"]',
+    'a[href*="applink.reddit.com"]',
+    'a[href*="onelink.me"]',
+    'a[href^="reddit://"]',
+    'a[href^="twitter://"]',
   ];
   function hide(el) {
     if (!el || el.__foBanner) return;
