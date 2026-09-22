@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "minAppVersion": "1.0.0",
   "updatedAt": "2026-09-22",
   "platforms": {
@@ -196,7 +196,8 @@
       "js": [
         "noAutoplayNext",
         "killInstallBanner",
-        "oneVideoOnly"
+        "oneVideoOnly",
+        "ytSignInHint"
       ]
     }
   }
