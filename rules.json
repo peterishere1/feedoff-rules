@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "minAppVersion": "1.0.0",
   "updatedAt": "2026-09-22",
   "platforms": {
@@ -76,13 +76,6 @@
                 "title": "Suggested posts hidden by FeedOff",
                 "body": ""
               }
-            },
-            {
-              "selector": "main > div > div > div > div",
-              "contains": [
-                "Suggested for you"
-              ],
-              "maxTextLength": 60
             }
           ]
         },
