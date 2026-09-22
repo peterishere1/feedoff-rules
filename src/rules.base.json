@@ -1,0 +1,205 @@
+{
+  "version": 1,
+  "minAppVersion": "1.0.0",
+  "updatedAt": "2026-09-22",
+  "platforms": {
+    "instagram": {
+      "name": "Instagram",
+      "home": "https://www.instagram.com/",
+      "hosts": [
+        "instagram.com",
+        "cdninstagram.com",
+        "fbcdn.net",
+        "facebook.com"
+      ],
+      "redirects": [
+        {
+          "match": "^/reels(/|$)",
+          "to": "/",
+          "toggle": "reels"
+        },
+        {
+          "match": "^/explore(/|$)",
+          "to": "/",
+          "toggle": "explore"
+        }
+      ],
+      "allow": [
+        {
+          "match": "^/reel/[A-Za-z0-9_-]+/?",
+          "note": "A single reel opened from a DM or profile stays watchable"
+        }
+      ],
+      "blockRequests": [
+        "*://*.doubleclick.net/*",
+        "*://www.facebook.com/tr*",
+        "*://*.googlesyndication.com/*"
+      ],
+      "toggles": {
+        "reels": {
+          "label": "Hide Reels",
+          "detail": "Removes the Reels tab and the Reels feed. A reel someone sends you still plays.",
+          "default": true,
+          "css": [
+            "a[href='/reels/']",
+            "a[href^='/reels/']",
+            "svg[aria-label='Reels']",
+            "div[role='tablist'] a[href^='/reels']"
+          ]
+        },
+        "explore": {
+          "label": "Hide Explore",
+          "detail": "Removes the Explore tab and its grid of suggested posts.",
+          "default": true,
+          "css": [
+            "a[href='/explore/']",
+            "a[href^='/explore/']",
+            "svg[aria-label='Explore']",
+            "svg[aria-label='Search and explore']"
+          ]
+        },
+        "suggested": {
+          "label": "Hide suggested posts & ads",
+          "detail": "Removes 'Suggested for you' and 'Sponsored' posts from your home feed.",
+          "default": true,
+          "css": [],
+          "hideIfText": [
+            {
+              "selector": "article",
+              "contains": [
+                "Suggested for you",
+                "Sponsored",
+                "Suggested posts"
+              ]
+            },
+            {
+              "selector": "main > div > div > div > div",
+              "contains": [
+                "Suggested for you"
+              ],
+              "maxTextLength": 60
+            }
+          ]
+        },
+        "live": {
+          "label": "Hide Live",
+          "detail": "Removes the Live tab and live badges.",
+          "default": true,
+          "css": [
+            "a[href^='/live/']",
+            "svg[aria-label='Live']"
+          ]
+        },
+        "shop": {
+          "label": "Hide Shop",
+          "detail": "Removes shopping tabs and shop links.",
+          "default": true,
+          "css": [
+            "a[href^='/shop/']",
+            "svg[aria-label='Shop']"
+          ]
+        }
+      },
+      "js": [
+        "oneVideoOnly",
+        "killInstallBanner"
+      ]
+    },
+    "youtube": {
+      "name": "YouTube",
+      "home": "https://m.youtube.com/feed/subscriptions",
+      "hosts": [
+        "youtube.com",
+        "m.youtube.com",
+        "googlevideo.com",
+        "ytimg.com",
+        "ggpht.com",
+        "google.com",
+        "accounts.google.com"
+      ],
+      "redirects": [
+        {
+          "match": "^/shorts(/|$)",
+          "to": "/feed/subscriptions",
+          "toggle": "shorts"
+        },
+        {
+          "match": "^/?$",
+          "to": "/feed/subscriptions",
+          "toggle": "homefeed"
+        },
+        {
+          "match": "^/feed/explore(/|$)",
+          "to": "/feed/subscriptions",
+          "toggle": "homefeed"
+        },
+        {
+          "match": "^/feed/trending(/|$)",
+          "to": "/feed/subscriptions",
+          "toggle": "homefeed"
+        }
+      ],
+      "allow": [],
+      "blockRequests": [
+        "*://*.doubleclick.net/*",
+        "*://*.googlesyndication.com/*",
+        "*://*.googleadservices.com/*"
+      ],
+      "toggles": {
+        "shorts": {
+          "label": "Hide Shorts",
+          "detail": "Removes the Shorts tab, Shorts shelves and Shorts links everywhere.",
+          "default": true,
+          "css": [
+            "ytm-reel-shelf-renderer",
+            "ytm-rich-section-renderer:has(ytm-reel-shelf-renderer)",
+            "ytm-pivot-bar-item-renderer:has(.pivot-bar-item-tab.shorts)",
+            "ytm-pivot-bar-item-renderer:has(.pivot-shorts)",
+            "ytm-pivot-bar-item-renderer:has([aria-label*='Shorts'])",
+            "a[href^='/shorts/']",
+            "ytm-shorts-lockup-view-model",
+            "ytm-shorts-lockup-view-model-v2"
+          ]
+        },
+        "homefeed": {
+          "label": "Hide Home feed",
+          "detail": "Home opens your Subscriptions instead of recommendations.",
+          "default": true,
+          "css": [
+            "ytm-pivot-bar-item-renderer:has(.pivot-bar-item-tab.w2w)",
+            "ytm-pivot-bar-item-renderer:has(.pivot-w2w)",
+            "ytm-pivot-bar-item-renderer:has([aria-label='Home'])",
+            "ytm-browse[page-subtype='home'] ytm-rich-grid-renderer",
+            "ytm-browse[page-subtype='home'] ytm-section-list-renderer"
+          ]
+        },
+        "related": {
+          "label": "Hide related videos",
+          "detail": "Removes the 'Up next' list under a video.",
+          "default": false,
+          "css": [
+            "ytm-item-section-renderer[section-identifier='related-items']",
+            "ytm-watch-next-secondary-results-renderer",
+            "ytm-single-column-watch-next-results-renderer ytm-item-section-renderer[section-identifier='related-items']"
+          ]
+        },
+        "comments": {
+          "label": "Hide comments",
+          "detail": "Removes the comments section under a video.",
+          "default": false,
+          "css": [
+            "yt-video-metadata-carousel-view-model[aria-label='Comments']",
+            "ytm-comment-section-header-renderer",
+            "ytm-comments-entry-point-header-renderer",
+            "ytm-item-section-renderer[section-identifier='comments-entry-point']"
+          ]
+        }
+      },
+      "js": [
+        "noAutoplayNext",
+        "killInstallBanner",
+        "oneVideoOnly"
+      ]
+    }
+  }
+}
