@@ -3,7 +3,7 @@
 `rules.json` is the only thing the FeedOff app downloads. It tells the app which parts of
 Instagram and YouTube's mobile sites to hide, which paths to redirect, and which requests to
 block. It is bundled into the app as a fallback and fetched from
-`https://rules.feedoff.app/v1/rules.json` on launch and every 6 hours.
+`https://feedoff.app/v1/rules.json` on launch and every 6 hours.
 
 ## Layout
 
