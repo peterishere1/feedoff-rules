@@ -2,7 +2,7 @@
 // One-time: open a real WebKit window, let a human log in, then save the session for the nightly
 // selector check.  Usage:  node scripts/capture-login.mjs instagram|youtube|x|reddit|linkedin
 // The saved JSON goes to rules/.state/<platform>.json (git-ignored). Store it as the GitHub secret
-// FEEDOFF_STATE_<PLATFORM>:   gh secret set FEEDOFF_STATE_INSTAGRAM < .state/instagram.json
+// FEEDOFF_STATE_<PLATFORM>:   gh secret set FEEDOFF_STATE_INSTAGRAM -R peterishere1/feedoff < .state/instagram.json
 import { webkit, devices } from 'playwright';
 import { mkdirSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -26,5 +26,5 @@ mkdirSync(join(here, '../.state'), { recursive: true });
 const out = join(here, `../.state/${platform}.json`);
 await ctx.storageState({ path: out });
 await b.close();
-console.log(`Saved ${out}\nNow: gh secret set FEEDOFF_STATE_${platform.toUpperCase()} < rules/.state/${platform}.json`);
+console.log(`Saved ${out}\nNow: cd ~/feedoff && gh secret set FEEDOFF_STATE_${platform.toUpperCase()} -R peterishere1/feedoff < rules/.state/${platform}.json`);
 process.exit(0);
