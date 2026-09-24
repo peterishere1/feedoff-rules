@@ -22,8 +22,20 @@ const PLAN = {
     loginRequired: false,
     pages: [
       { url: 'https://m.youtube.com/', toggles: ['shorts', 'homefeed'] },
-      { url: 'https://m.youtube.com/watch?v=dQw4w9WgXcQ', toggles: ['related', 'comments'] },
+      { url: 'https://m.youtube.com/watch?v=dQw4w9WgXcQ', toggles: ['related', 'comments', 'ads'] },
     ],
+  },
+  x: {
+    loginRequired: true,
+    pages: [{ url: 'https://x.com/home', toggles: ['foryou', 'trending', 'extras'] }],
+  },
+  reddit: {
+    loginRequired: false,
+    pages: [{ url: 'https://www.reddit.com/r/popular/', toggles: ['ads', 'apppromo'] }],
+  },
+  linkedin: {
+    loginRequired: true,
+    pages: [{ url: 'https://www.linkedin.com/feed/', toggles: ['pymk', 'news'] }],
   },
 };
 
