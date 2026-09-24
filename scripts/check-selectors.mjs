@@ -36,7 +36,8 @@ const PLAN = {
   },
   linkedin: {
     loginRequired: true,
-    pages: [{ url: 'https://www.linkedin.com/feed/', toggles: ['pymk', 'news'], ready: 'main' }],
+    // A new or quiet account may have no PYMK / news modules at all; absence is a warning, not a failure.
+    pages: [{ url: 'https://www.linkedin.com/feed/', toggles: ['pymk', 'news'], ready: 'main', optional: ['pymk', 'news'] }],
   },
 };
 
@@ -72,7 +73,8 @@ for (const [id, platform] of Object.entries(rules.platforms)) {
       for (const selector of toggle.css) {
         let count = -1;
         try { count = await page.locator(selector).count(); } catch (e) { count = -1; }
-        results.push({ platform: id, toggle: toggleId, selector, url: step.url, count, status: count > 0 ? 'ok' : count === 0 ? 'nomatch' : 'invalid' });
+        const optional = (step.optional || []).includes(toggleId);
+        results.push({ platform: id, toggle: toggleId, selector, url: step.url, count, optional, status: count > 0 ? 'ok' : count === 0 ? 'nomatch' : 'invalid' });
       }
     }
   }
@@ -92,7 +94,7 @@ for (const r of results) {
 // A selector that matches nothing is a warning, not a hard failure: several selectors per
 // toggle overlap on purpose. Fail only if an entire toggle has no matching selector.
 const byToggle = {};
-for (const r of results.filter((r) => r.selector)) {
+for (const r of results.filter((r) => r.selector && !r.optional)) {
   const k = `${r.platform}.${r.toggle}`;
   byToggle[k] = byToggle[k] || { ok: 0, total: 0 };
   byToggle[k].total++;
