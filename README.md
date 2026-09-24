@@ -1,5 +1,10 @@
 # FeedOff filter rules
 
+The filter rules for [FeedOff](https://feedoff.app), the free iPhone app that shows Instagram,
+YouTube, X, Reddit and LinkedIn without their feeds. This folder is published from the app's
+repository to [github.com/peterishere1/feedoff-rules](https://github.com/peterishere1/feedoff-rules)
+so anyone can read what the app hides and send a fix when a site changes. MIT licensed.
+
 `rules.json` is the only thing the FeedOff app downloads. It tells the app which parts of
 Instagram and YouTube's mobile sites to hide, which paths to redirect, and which requests to
 block. It is bundled into the app as a fallback and fetched from
@@ -37,6 +42,12 @@ platforms.<id>
   js[]         names of behaviours from jsLibrary to inject on this platform
 jsLibrary      name -> JavaScript source (generated from src/js by build.mjs)
 ```
+
+## Sending a fix
+
+Open a pull request against `src/rules.base.json` (or a file in `src/js/`) with a one-line note on
+what changed on the site. Bump `version`. The nightly check runs against the live sites; a green run
+plus a quick look is all it takes to merge, and the app picks it up within 6 hours.
 
 ## Finding a broken selector
 
