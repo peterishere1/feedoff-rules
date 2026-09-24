@@ -1,5 +1,5 @@
 {
-  "version": 12,
+  "version": 13,
   "minAppVersion": "1.0.0",
   "updatedAt": "2026-09-22",
   "platforms": {
@@ -75,7 +75,7 @@
               "placeholder": {
                 "title": "Suggested post hidden by FeedOff",
                 "body": "",
-                "end": "You're all caught up.\\nEverything below this was suggested by Instagram, so FeedOff stopped here."
+                "end": "You're all caught up.\nEverything below this was suggested by Instagram, so FeedOff stopped here."
               }
             }
           ]
