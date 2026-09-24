@@ -16,7 +16,7 @@ const rules = JSON.parse(readFileSync(join(here, '../rules.json'), 'utf8'));
 const PLAN = {
   instagram: {
     loginRequired: true,
-    pages: [{ url: 'https://www.instagram.com/', toggles: ['reels', 'explore', 'suggested'] }],
+    pages: [{ url: 'https://www.instagram.com/', toggles: ['reels', 'explore', 'suggested'], ready: 'article' }],
   },
   youtube: {
     loginRequired: false,
@@ -27,15 +27,16 @@ const PLAN = {
   },
   x: {
     loginRequired: true,
-    pages: [{ url: 'https://x.com/home', toggles: ['foryou', 'trending', 'extras'] }],
+    pages: [{ url: 'https://x.com/home', toggles: ['foryou', 'trending', 'extras'], ready: '[data-testid="primaryColumn"]' }],
   },
   reddit: {
     loginRequired: false,
-    pages: [{ url: 'https://www.reddit.com/r/popular/', toggles: ['ads', 'apppromo'] }],
+    // Reddit answers datacenter IPs with a bot check; `ready` says what a real page must contain.
+    pages: [{ url: 'https://www.reddit.com/r/popular/', toggles: ['ads', 'apppromo'], ready: 'shreddit-post' }],
   },
   linkedin: {
     loginRequired: true,
-    pages: [{ url: 'https://www.linkedin.com/feed/', toggles: ['pymk', 'news'] }],
+    pages: [{ url: 'https://www.linkedin.com/feed/', toggles: ['pymk', 'news'], ready: 'main' }],
   },
 };
 
@@ -57,6 +58,14 @@ for (const [id, platform] of Object.entries(rules.platforms)) {
   for (const step of plan.pages) {
     await page.goto(step.url, { waitUntil: 'networkidle', timeout: 60_000 }).catch(() => {});
     await page.waitForTimeout(3000);
+    if (step.ready) {
+      const ok = await page.locator(step.ready).count().catch(() => 0);
+      if (!ok) {
+        const title = await page.title().catch(() => '');
+        results.push({ platform: id, status: 'skipped', reason: `${step.url} did not render (${title || 'no title'}); bot check or login expired` });
+        continue;
+      }
+    }
     for (const toggleId of step.toggles) {
       const toggle = platform.toggles[toggleId];
       if (!toggle) continue;
