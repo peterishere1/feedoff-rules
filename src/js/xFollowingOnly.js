@@ -1,20 +1,29 @@
-// X: when the home timeline opens on "For you", switch to "Following". X remembers the choice.
+// X: open Home on "Following", hide the "For you" tab, and mark the Explore page for CSS scoping.
 (function () {
   if (!/(^|\.)x\.com$|twitter\.com$/.test(location.hostname)) return;
   var FO = window.__feedoff;
   function on() { return !FO || !FO.enabled || FO.enabled.indexOf('foryou') !== -1; }
   var last = 0;
-  function check() {
-    if (!on() || !/^\/home\/?$/.test(location.pathname)) return;
-    var now = Date.now(); if (now - last < 800) return; last = now;
-    var tabs = document.querySelector('[data-testid="primaryColumn"] [role="tablist"]') || document.querySelector('main [role="tablist"]');
-    if (!tabs) return;
-    var items = tabs.querySelectorAll('[role="tab"]');
-    if (items.length < 2) return;
-    var first = items[0], second = items[1];
-    var firstSelected = first.getAttribute('aria-selected') === 'true';
-    if (firstSelected) { try { second.click(); } catch (e) {} }
+  function tabs() {
+    var all = document.querySelectorAll('[role="tab"]');
+    var forYou = null, following = null;
+    all.forEach(function (t) {
+      var txt = (t.textContent || '').trim().toLowerCase();
+      if (txt === 'for you') forYou = t; else if (txt === 'following') following = t;
+    });
+    return { forYou: forYou, following: following };
   }
-  setTimeout(check, 1500);
+  function check() {
+    document.documentElement.classList.toggle('feedoff-explore', /^\/explore/.test(location.pathname));
+    if (!on() || !/^\/home\/?$/.test(location.pathname)) return;
+    var t = tabs(); if (!t.forYou || !t.following) return;
+    if (t.forYou.getAttribute('aria-selected') === 'true') {
+      var now = Date.now(); if (now - last < 1500) return; last = now;
+      try { t.following.click(); } catch (e) {}
+    }
+    t.forYou.style.setProperty('display', 'none', 'important');
+  }
+  setTimeout(check, 1200);
   FO && FO.onSweep(check);
+  window.addEventListener('popstate', function () { setTimeout(check, 100); });
 })();

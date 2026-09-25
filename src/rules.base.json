@@ -1,5 +1,5 @@
 {
-  "version": 13,
+  "version": 14,
   "minAppVersion": "1.0.0",
   "updatedAt": "2026-09-22",
   "platforms": {
@@ -281,55 +281,55 @@
       "toggles": {
         "foryou": {
           "label": "Following only",
-          "detail": "Home opens on the Following tab instead of For You, and the video feed is hidden.",
+          "detail": "Home opens on the Following tab. The For You tab is hidden.",
           "default": true,
           "css": [
-            "[data-testid='primaryColumn'] [role='tablist'] > div:first-child",
-            "main [role='tablist'] [role='presentation']:first-child",
-            "a[href='/i/videos']",
-            "a[href='/i/videos'] + *"
+            "a[href='/i/videos']"
           ]
         },
         "trending": {
-          "label": "Hide trends & Who to follow",
-          "detail": "Removes trending topics and suggested accounts from Home and Explore.",
+          "label": "Hide trends, news & Who to follow",
+          "detail": "Explore keeps search but loses trends, news, suggested accounts and Posts For You.",
           "default": true,
           "css": [
-            "[aria-label='Timeline: Trending now']",
-            "[data-testid='trend']",
             "div[data-testid='cellInnerDiv']:has([data-testid='trend'])",
-            "[aria-label='Who to follow']",
             "div[data-testid='cellInnerDiv']:has([data-testid='UserCell'])",
-            "div[data-testid='cellInnerDiv']:has(a[href*='/i/connect_people'])",
-            "div[data-testid='cellInnerDiv']:has(a[href*='/explore/tabs'])",
-            "[data-testid='sidebarColumn']"
+            "div[data-testid='cellInnerDiv']:has([data-testid='eventHero'])",
+            "html.feedoff-explore div[data-testid='cellInnerDiv']:has([data-testid='tweet'])",
+            "html.feedoff-explore [role='tablist']:has([role='tab'])",
+            "[aria-label='Timeline: Trending now']",
+            "[aria-label='Who to follow']"
           ]
         },
         "promoted": {
           "label": "Hide promoted posts",
           "detail": "Removes ads from the timeline.",
           "default": true,
-          "css": [
-            "div[data-testid='cellInnerDiv']:has([data-testid='placementTracking'])",
-            "article:has([data-testid='placementTracking'])"
-          ],
+          "css": [],
           "hideIfText": [
             {
               "selector": "div[data-testid='cellInnerDiv']",
-              "contains": [
+              "contains": [],
+              "exact": [
+                "Ad",
                 "Promoted"
               ],
-              "maxTextLength": 4000
+              "leaf": "span",
+              "placeholder": {
+                "title": "Ad hidden by FeedOff",
+                "body": ""
+              }
             }
           ]
         },
         "extras": {
           "label": "Hide Grok, Communities & Premium",
-          "detail": "Removes the Grok, Communities, Premium and monetisation entries.",
+          "detail": "Removes the Grok, Communities, Premium and Jobs entries.",
           "default": true,
           "css": [
             "a[href='/i/grok']",
             "a[href*='/i/grok']",
+            "[data-testid='AppTabBar_Grok_Link']",
             "a[href*='/communities']",
             "a[href*='/i/premium']",
             "a[href*='/i/verified-orgs']",

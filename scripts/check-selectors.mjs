@@ -27,7 +27,10 @@ const PLAN = {
   },
   x: {
     loginRequired: true,
-    pages: [{ url: 'https://x.com/home', toggles: ['foryou', 'trending', 'extras'], ready: '[data-testid="primaryColumn"]' }],
+    pages: [
+      { url: 'https://x.com/home', toggles: ['extras'], ready: '[data-testid="primaryColumn"]' },
+      { url: 'https://x.com/explore', toggles: ['trending'], ready: '[data-testid="primaryColumn"]', optional: ['trending'] },
+    ],
   },
   reddit: {
     loginRequired: false,

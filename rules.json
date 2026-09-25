@@ -1,5 +1,5 @@
 {
-  "version": 13,
+  "version": 14,
   "minAppVersion": "1.0.0",
   "updatedAt": "2026-09-22",
   "platforms": {
@@ -281,55 +281,55 @@
       "toggles": {
         "foryou": {
           "label": "Following only",
-          "detail": "Home opens on the Following tab instead of For You, and the video feed is hidden.",
+          "detail": "Home opens on the Following tab. The For You tab is hidden.",
           "default": true,
           "css": [
-            "[data-testid='primaryColumn'] [role='tablist'] > div:first-child",
-            "main [role='tablist'] [role='presentation']:first-child",
-            "a[href='/i/videos']",
-            "a[href='/i/videos'] + *"
+            "a[href='/i/videos']"
           ]
         },
         "trending": {
-          "label": "Hide trends & Who to follow",
-          "detail": "Removes trending topics and suggested accounts from Home and Explore.",
+          "label": "Hide trends, news & Who to follow",
+          "detail": "Explore keeps search but loses trends, news, suggested accounts and Posts For You.",
           "default": true,
           "css": [
-            "[aria-label='Timeline: Trending now']",
-            "[data-testid='trend']",
             "div[data-testid='cellInnerDiv']:has([data-testid='trend'])",
-            "[aria-label='Who to follow']",
             "div[data-testid='cellInnerDiv']:has([data-testid='UserCell'])",
-            "div[data-testid='cellInnerDiv']:has(a[href*='/i/connect_people'])",
-            "div[data-testid='cellInnerDiv']:has(a[href*='/explore/tabs'])",
-            "[data-testid='sidebarColumn']"
+            "div[data-testid='cellInnerDiv']:has([data-testid='eventHero'])",
+            "html.feedoff-explore div[data-testid='cellInnerDiv']:has([data-testid='tweet'])",
+            "html.feedoff-explore [role='tablist']:has([role='tab'])",
+            "[aria-label='Timeline: Trending now']",
+            "[aria-label='Who to follow']"
           ]
         },
         "promoted": {
           "label": "Hide promoted posts",
           "detail": "Removes ads from the timeline.",
           "default": true,
-          "css": [
-            "div[data-testid='cellInnerDiv']:has([data-testid='placementTracking'])",
-            "article:has([data-testid='placementTracking'])"
-          ],
+          "css": [],
           "hideIfText": [
             {
               "selector": "div[data-testid='cellInnerDiv']",
-              "contains": [
+              "contains": [],
+              "exact": [
+                "Ad",
                 "Promoted"
               ],
-              "maxTextLength": 4000
+              "leaf": "span",
+              "placeholder": {
+                "title": "Ad hidden by FeedOff",
+                "body": ""
+              }
             }
           ]
         },
         "extras": {
           "label": "Hide Grok, Communities & Premium",
-          "detail": "Removes the Grok, Communities, Premium and monetisation entries.",
+          "detail": "Removes the Grok, Communities, Premium and Jobs entries.",
           "default": true,
           "css": [
             "a[href='/i/grok']",
             "a[href*='/i/grok']",
+            "[data-testid='AppTabBar_Grok_Link']",
             "a[href*='/communities']",
             "a[href*='/i/premium']",
             "a[href*='/i/verified-orgs']",
@@ -552,7 +552,7 @@
     "noAutoplayNext": "// YouTube: pause when a video ends and keep the Autoplay toggle off.\n(function () {\n  if (!/youtube\\.com$/.test(location.hostname)) return;\n  function killAutonav() {\n    document.querySelectorAll('.ytm-autonav-toggle-button-container[aria-pressed=\"true\"], button[aria-label*=\"Autoplay is on\"]').forEach((b) => {\n      try { b.click(); } catch (_) {}\n    });\n  }\n  function hook(video) {\n    if (video.__foHooked) return;\n    video.__foHooked = true;\n    video.addEventListener('ended', () => {\n      try { video.pause(); } catch (_) {}\n      killAutonav();\n    });\n  }\n  function sweep() {\n    document.querySelectorAll('video').forEach(hook);\n    killAutonav();\n  }\n  window.__feedoff && window.__feedoff.onSweep(sweep);\n  sweep();\n})();\n",
     "oneVideoOnly": "// On a single reel/short page (/reel/ID or /shorts/ID), watch that one video only:\n// block the vertical swipe that loads the next one.\n(function () {\n  const RX = /^\\/(reel|shorts)\\/[A-Za-z0-9_-]+/;\n  function onSingle() { return RX.test(location.pathname); }\n  function idOf(p) { const m = RX.exec(p); return m ? m[0] : null; }\n  let startId = idOf(location.pathname);\n\n  function block(e) {\n    if (!onSingle()) return;\n    // Let taps and horizontal drags through; stop vertical drags that page to the next video.\n    if (e.type === 'touchmove' || e.type === 'wheel') {\n      e.stopImmediatePropagation();\n      e.preventDefault();\n    }\n  }\n  document.addEventListener('touchmove', block, { capture: true, passive: false });\n  document.addEventListener('wheel', block, { capture: true, passive: false });\n\n  // If the site still advances via pushState, step back to the video we opened.\n  const origPush = history.pushState.bind(history);\n  const origReplace = history.replaceState.bind(history);\n  function guard(url) {\n    try {\n      const p = new URL(url, location.href).pathname;\n      const next = idOf(p);\n      if (startId && next && next !== startId) return false;\n      if (!startId) startId = next;\n    } catch (_) {}\n    return true;\n  }\n  history.pushState = function (s, t, url) { if (url && !guard(url)) return; return origPush(s, t, url); };\n  history.replaceState = function (s, t, url) { if (url && !guard(url)) return; return origReplace(s, t, url); };\n  window.addEventListener('popstate', () => { startId = idOf(location.pathname); });\n})();\n",
     "redditHome": "// Reddit: mark the Home / Popular / All pages so the CSS can hide their feeds, and show a hint\n// where the feed was. Subreddits you visit directly keep their posts.\n(function () {\n  if (!/reddit\\.com$/.test(location.hostname)) return;\n  var FO = window.__feedoff;\n  function on() { return !FO || !FO.enabled || FO.enabled.indexOf('homefeed') !== -1; }\n  var ID = '__feedoff_reddit_hint';\n  function isHome() { return /^\\/(r\\/(popular|all)\\/?|best\\/?)?$/.test(location.pathname) || /^\\/\\?feed=/.test(location.pathname + location.search); }\n  function apply() {\n    var home = on() && isHome();\n    document.documentElement.classList.toggle('feedoff-home', home);\n    var hint = document.getElementById(ID);\n    if (home && !hint) {\n      var box = document.createElement('div');\n      box.id = ID;\n      box.style.cssText = 'position:fixed;left:16px;right:16px;top:40%;transform:translateY(-50%);padding:22px 18px;border-radius:16px;background:rgba(127,127,127,.12);text-align:center;font:15px/1.45 -apple-system,system-ui,sans-serif;color:inherit;z-index:2147483000;pointer-events:none;';\n      var t = document.createElement('div'); t.style.cssText = 'font-weight:700;font-size:17px;margin-bottom:6px;'; t.textContent = 'Home feed hidden';\n      var s = document.createElement('div'); s.style.cssText = 'opacity:.75;'; s.textContent = 'Open the menu in the top left for your communities, or search for one. Posts inside a community show as normal.';\n      box.appendChild(t); box.appendChild(s);\n      document.body.appendChild(box);\n    } else if (!home && hint) {\n      hint.remove();\n    }\n  }\n  setTimeout(apply, 800);\n  FO && FO.onSweep(apply);\n  window.addEventListener('popstate', function () { setTimeout(apply, 50); });\n})();\n",
-    "xFollowingOnly": "// X: when the home timeline opens on \"For you\", switch to \"Following\". X remembers the choice.\n(function () {\n  if (!/(^|\\.)x\\.com$|twitter\\.com$/.test(location.hostname)) return;\n  var FO = window.__feedoff;\n  function on() { return !FO || !FO.enabled || FO.enabled.indexOf('foryou') !== -1; }\n  var last = 0;\n  function check() {\n    if (!on() || !/^\\/home\\/?$/.test(location.pathname)) return;\n    var now = Date.now(); if (now - last < 800) return; last = now;\n    var tabs = document.querySelector('[data-testid=\"primaryColumn\"] [role=\"tablist\"]') || document.querySelector('main [role=\"tablist\"]');\n    if (!tabs) return;\n    var items = tabs.querySelectorAll('[role=\"tab\"]');\n    if (items.length < 2) return;\n    var first = items[0], second = items[1];\n    var firstSelected = first.getAttribute('aria-selected') === 'true';\n    if (firstSelected) { try { second.click(); } catch (e) {} }\n  }\n  setTimeout(check, 1500);\n  FO && FO.onSweep(check);\n})();\n",
+    "xFollowingOnly": "// X: open Home on \"Following\", hide the \"For you\" tab, and mark the Explore page for CSS scoping.\n(function () {\n  if (!/(^|\\.)x\\.com$|twitter\\.com$/.test(location.hostname)) return;\n  var FO = window.__feedoff;\n  function on() { return !FO || !FO.enabled || FO.enabled.indexOf('foryou') !== -1; }\n  var last = 0;\n  function tabs() {\n    var all = document.querySelectorAll('[role=\"tab\"]');\n    var forYou = null, following = null;\n    all.forEach(function (t) {\n      var txt = (t.textContent || '').trim().toLowerCase();\n      if (txt === 'for you') forYou = t; else if (txt === 'following') following = t;\n    });\n    return { forYou: forYou, following: following };\n  }\n  function check() {\n    document.documentElement.classList.toggle('feedoff-explore', /^\\/explore/.test(location.pathname));\n    if (!on() || !/^\\/home\\/?$/.test(location.pathname)) return;\n    var t = tabs(); if (!t.forYou || !t.following) return;\n    if (t.forYou.getAttribute('aria-selected') === 'true') {\n      var now = Date.now(); if (now - last < 1500) return; last = now;\n      try { t.following.click(); } catch (e) {}\n    }\n    t.forYou.style.setProperty('display', 'none', 'important');\n  }\n  setTimeout(check, 1200);\n  FO && FO.onSweep(check);\n  window.addEventListener('popstate', function () { setTimeout(check, 100); });\n})();\n",
     "ytAdPrune": "// YouTube: remove ad slots from the player data before the player ever sees them.\n// Runs at document start. Gated by the \"ads\" toggle via window.__feedoff.enabled.\n(function () {\n  if (!/youtube\\.com$/.test(location.hostname)) return;\n  var FO = window.__feedoff;\n  function on() { return !FO || !FO.enabled || FO.enabled.indexOf('ads') !== -1; }\n  var KEYS = ['adPlacements', 'playerAds', 'adSlots', 'adBreakHeartbeatParams', 'adBreakParams', 'adParams'];\n  function prune(o) {\n    if (!o || typeof o !== 'object') return o;\n    try {\n      for (var i = 0; i < KEYS.length; i++) if (KEYS[i] in o) delete o[KEYS[i]];\n      if (o.playerResponse) prune(o.playerResponse);\n      if (o.playerConfig && o.playerConfig.daiConfig) delete o.playerConfig.daiConfig;\n    } catch (e) {}\n    return o;\n  }\n  var origParse = JSON.parse;\n  JSON.parse = function () { var r = origParse.apply(this, arguments); return on() ? prune(r) : r; };\n  if (window.Response && Response.prototype.json) {\n    var origJson = Response.prototype.json;\n    Response.prototype.json = function () {\n      return origJson.apply(this, arguments).then(function (r) { return on() ? prune(r) : r; });\n    };\n  }\n  var initial;\n  try {\n    Object.defineProperty(window, 'ytInitialPlayerResponse', {\n      configurable: true,\n      get: function () { return initial; },\n      set: function (v) { initial = on() ? prune(v) : v; },\n    });\n  } catch (e) {}\n})();\n",
     "ytAdSkip": "// YouTube: if an ad still plays, mute it and jump to its end; click Skip/close when offered.\n(function () {\n  if (!/youtube\\.com$/.test(location.hostname)) return;\n  var FO = window.__feedoff;\n  function on() { return !FO || !FO.enabled || FO.enabled.indexOf('ads') !== -1; }\n  var wasMuted = null;\n  function tick() {\n    if (!on()) return;\n    var ad = document.querySelector('.ad-showing, .ad-interrupting, .ytp-ad-player-overlay, ytm-player-ad-overlay, .ytp-ad-preview-container');\n    var v = document.querySelector('video');\n    if (ad && v) {\n      if (wasMuted === null) wasMuted = v.muted;\n      v.muted = true;\n      if (isFinite(v.duration) && v.duration > 0) { try { v.currentTime = v.duration; } catch (e) {} }\n      try { v.playbackRate = 16; } catch (e) {}\n    } else if (v && wasMuted !== null) {\n      v.muted = wasMuted; wasMuted = null;\n      try { if (v.playbackRate === 16) v.playbackRate = 1; } catch (e) {}\n    }\n    var skip = document.querySelector('.ytp-ad-skip-button, .ytp-ad-skip-button-modern, .ytp-skip-ad-button, button.ytm-skip-ad-button, [class*=\"skip-button\"], [id*=\"skip-button\"]');\n    if (skip) { try { skip.click(); } catch (e) {} }\n    var close = document.querySelector('.ytp-ad-overlay-close-button, .ytm-ad-overlay-close');\n    if (close) { try { close.click(); } catch (e) {} }\n  }\n  setInterval(tick, 400);\n  FO && FO.onSweep(tick);\n})();\n",
     "ytSignInHint": "// YouTube: the Subscriptions page is empty when signed out. Show a hint instead of a blank screen.\n(function () {\n  if (!/youtube\\.com$/.test(location.hostname)) return;\n  var ID = '__feedoff_yt_hint';\n  function hasContent() {\n    return !!document.querySelector('ytm-section-list-renderer, ytm-item-section-renderer, ytm-rich-grid-renderer, ytm-watch, ytm-search');\n  }\n  function signedIn() {\n    return !!document.querySelector('ytm-profile-icon img, img.avatar, [aria-label*=\"Account\"] img');\n  }\n  function show() {\n    if (document.getElementById(ID)) return;\n    var box = document.createElement('div');\n    box.id = ID;\n    box.style.cssText = 'position:fixed;left:16px;right:16px;top:45%;transform:translateY(-50%);padding:22px 18px;border-radius:16px;background:rgba(127,127,127,.12);text-align:center;font:15px/1.45 -apple-system,system-ui,sans-serif;color:inherit;z-index:2147483000;';\n    var t = document.createElement('div'); t.style.cssText = 'font-weight:700;font-size:17px;margin-bottom:6px;'; t.textContent = 'Sign in to see your subscriptions';\n    var s = document.createElement('div'); s.style.cssText = 'opacity:.75;margin-bottom:14px;'; s.textContent = 'In FeedOff, YouTube opens on Subscriptions instead of the Home feed. Sign in once and it stays signed in.';\n    var a = document.createElement('a');\n    a.href = 'https://accounts.google.com/ServiceLogin?service=youtube&continue=' + encodeURIComponent('https://m.youtube.com/feed/subscriptions');\n    a.textContent = 'Sign in';\n    a.style.cssText = 'display:inline-block;padding:10px 22px;border-radius:999px;background:#FF6B4A;color:#fff;font-weight:600;text-decoration:none;';\n    box.appendChild(t); box.appendChild(s); box.appendChild(a);\n    document.body.appendChild(box);\n  }\n  function hide() { var b = document.getElementById(ID); if (b) b.remove(); }\n  function check() {\n    var onSubs = /^\\/feed\\/subscriptions/.test(location.pathname);\n    if (onSubs && !hasContent() && !signedIn()) show(); else hide();\n  }\n  setTimeout(check, 2500);\n  window.__feedoff && window.__feedoff.onSweep(check);\n})();\n"
