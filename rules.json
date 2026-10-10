@@ -1,5 +1,5 @@
 {
-  "version": 14,
+  "version": 15,
   "minAppVersion": "1.0.0",
   "updatedAt": "2026-09-22",
   "platforms": {
@@ -71,11 +71,71 @@
                 "Sponsored",
                 "Suggested posts"
               ],
-              "maxTextLength": 2500,
+              "maxTextLength": 8000,
               "placeholder": {
                 "title": "Suggested post hidden by FeedOff",
                 "body": "",
                 "end": "You're all caught up.\nEverything below this was suggested by Instagram, so FeedOff stopped here."
+              }
+            },
+            {
+              "selector": "article",
+              "exact": [
+                "Suggested posts",
+                "Publicaciones sugeridas",
+                "Posts suggérés",
+                "Vorgeschlagene Beiträge",
+                "Publicações sugeridas",
+                "Post suggeriti",
+                "منشورات مقترحة",
+                "Önerilen gönderiler",
+                "Voorgestelde berichten"
+              ],
+              "leaf": "span, h2, h3, h4, div",
+              "afterAll": true,
+              "placeholder": {
+                "title": "Suggested post hidden by FeedOff",
+                "body": ""
+              }
+            },
+            {
+              "selector": "article",
+              "exact": [
+                "Suggested for you",
+                "Sugerencias para ti",
+                "Suggestions pour vous",
+                "Vorschläge für dich",
+                "Sugestões para você",
+                "Suggeriti per te",
+                "مقترحة لك",
+                "مقترح لك",
+                "Senin için önerilenler",
+                "Voorgesteld voor jou"
+              ],
+              "leaf": "span, h2, h3, h4, div",
+              "placeholder": {
+                "title": "Suggested post hidden by FeedOff",
+                "body": ""
+              }
+            },
+            {
+              "selector": "article",
+              "exact": [
+                "Sponsored",
+                "Publicidad",
+                "Sponsorisé",
+                "Gesponsert",
+                "Patrocinado",
+                "Sponsorizzato",
+                "مُموَّل",
+                "ممول",
+                "Sponsorlu",
+                "Gesponsord"
+              ],
+              "leaf": "span, a, div",
+              "placeholder": {
+                "title": "Ad hidden by FeedOff",
+                "body": ""
               }
             }
           ]
