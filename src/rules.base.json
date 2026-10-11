@@ -1,5 +1,5 @@
 {
-  "version": 15,
+  "version": 16,
   "minAppVersion": "1.0.0",
   "updatedAt": "2026-09-22",
   "platforms": {
@@ -89,7 +89,17 @@
                 "Post suggeriti",
                 "منشورات مقترحة",
                 "Önerilen gönderiler",
-                "Voorgestelde berichten"
+                "Voorgestelde berichten",
+                "You're all caught up",
+                "You’re all caught up",
+                "You're All Caught Up",
+                "You’re All Caught Up",
+                "Suggested Posts",
+                "Estás al día",
+                "Vous êtes à jour",
+                "Du bist auf dem neuesten Stand",
+                "Você está em dia",
+                "Sei aggiornato"
               ],
               "leaf": "span, h2, h3, h4, div",
               "afterAll": true,
