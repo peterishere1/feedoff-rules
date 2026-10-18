@@ -1,5 +1,5 @@
 {
-  "version": 16,
+  "version": 17,
   "minAppVersion": "1.0.0",
   "updatedAt": "2026-09-22",
   "platforms": {
@@ -166,6 +166,58 @@
           "css": [
             "a[href^='/shop/']",
             "svg[aria-label='Shop']"
+          ]
+        },
+        "ai": {
+          "label": "Hide AI-labelled posts",
+          "detail": "Removes posts Instagram marks as made or edited with AI. Off by default; Instagram only labels some of them.",
+          "default": false,
+          "css": [],
+          "hideIfText": [
+            {
+              "selector": "article",
+              "exact": [
+                "AI info",
+                "Made with AI",
+                "AI generated",
+                "Made with Meta AI",
+                "Created with AI",
+                "Hecho con IA",
+                "Créé avec l'IA",
+                "Mit KI erstellt",
+                "Feito com IA"
+              ],
+              "leaf": "span, a, div",
+              "placeholder": {
+                "title": "AI-labelled post hidden by FeedOff",
+                "body": ""
+              }
+            }
+          ]
+        },
+        "reposts": {
+          "label": "Hide reposts",
+          "detail": "Removes posts that someone you follow reposted rather than made. Off by default.",
+          "default": false,
+          "css": [],
+          "hideIfText": [
+            {
+              "selector": "article",
+              "exact": [
+                "Reposted",
+                "Repost",
+                "reposted",
+                "Reposted by",
+                "Republicado",
+                "Republié",
+                "Erneut gepostet"
+              ],
+              "leaf": "span, a, div",
+              "placeholder": {
+                "title": "Repost hidden by FeedOff",
+                "body": ""
+              }
+            }
           ]
         }
       },
