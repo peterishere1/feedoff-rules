@@ -1,5 +1,5 @@
 {
-  "version": 17,
+  "version": 18,
   "minAppVersion": "1.0.0",
   "updatedAt": "2026-09-22",
   "platforms": {
@@ -36,6 +36,17 @@
         "*://*.googlesyndication.com/*"
       ],
       "toggles": {
+        "feed": {
+          "label": "Hide the whole feed",
+          "detail": "Home keeps only your stories tray. Every post is hidden, including from people you follow. Messages, your profile, stories and posting still work. Off by default.",
+          "default": false,
+          "css": [
+            "html.feedoff-ighome main [data-feedoff-feed='1']",
+            "html.feedoff-ighome main svg[aria-label='Loading...']",
+            "html.feedoff-ighome main article"
+          ],
+          "hideIfText": []
+        },
         "reels": {
           "label": "Hide Reels",
           "detail": "Removes the Reels tab and the Reels feed. A reel someone sends you still plays.",
@@ -223,7 +234,8 @@
       },
       "js": [
         "oneVideoOnly",
-        "killInstallBanner"
+        "killInstallBanner",
+        "igHomeFeed"
       ]
     },
     "youtube": {
