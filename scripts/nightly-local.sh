@@ -6,7 +6,7 @@ set -uo pipefail
 cd "$(dirname "$0")/.."
 export PATH="$HOME/.nvm/versions/node/$(ls "$HOME/.nvm/versions/node" | sort -V | tail -1)/bin:$PATH"
 mkdir -p report
-for p in instagram youtube x reddit linkedin; do
+for p in instagram youtube x reddit linkedin facebook; do
   f=".state/$p.json"; [ -f "$f" ] && export "FEEDOFF_STATE_$(echo $p | tr a-z A-Z)=$(cat "$f")"
 done
 if node scripts/check-selectors.mjs > report/local.log 2>&1; then

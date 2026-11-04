@@ -37,6 +37,11 @@ const PLAN = {
     // Reddit answers datacenter IPs with a bot check; `ready` says what a real page must contain.
     pages: [{ url: 'https://www.reddit.com/r/popular/', toggles: ['ads', 'apppromo'], ready: 'shreddit-post' }],
   },
+  facebook: {
+    loginRequired: true,
+    // Facebook's mobile site is container-based: the feed hide is path-scoped by fbHome, so only the Reels tab is checked here.
+    pages: [{ url: 'https://www.facebook.com/', toggles: ['reels'], ready: "[data-type='vscroller']" }],
+  },
   linkedin: {
     loginRequired: true,
     // A new or quiet account may have no PYMK / news modules at all; absence is a warning, not a failure.
