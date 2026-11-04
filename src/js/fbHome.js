@@ -6,7 +6,20 @@
   function on() { return !FO || !FO.enabled || FO.enabled.indexOf('homefeed') !== -1; }
   var ID = '__feedoff_fb_hint';
   function isHome() { return /^\/(home\.php|\?.*)?$/.test(location.pathname) || location.pathname === '/' ; }
+  function promoOn() { return !FO || !FO.enabled || FO.enabled.indexOf('apppromo') !== -1; }
+  // The "Open app" bar is a fixed container with no label; find it by its text and hide the whole bar.
+  function killOpenApp() {
+    if (!promoOn()) return;
+    var spans = document.querySelectorAll('span');
+    for (var i = 0; i < spans.length; i++) {
+      var sp = spans[i];
+      if (sp.children.length || !/^open app$/i.test((sp.textContent || '').trim())) continue;
+      var bar = sp.closest('[data-comp-id]');
+      if (bar && bar.getAttribute('data-feedoff-promo') !== '1') { bar.setAttribute('data-feedoff-promo', '1'); bar.style.setProperty('display', 'none', 'important'); }
+    }
+  }
   function apply() {
+    killOpenApp();
     var home = on() && isHome();
     document.documentElement.classList.toggle('feedoff-home', home);
     var hint = document.getElementById(ID);

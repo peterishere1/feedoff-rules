@@ -698,12 +698,7 @@
         {
           "match": "^/watch(/|$)",
           "to": "/",
-          "toggle": "watch"
-        },
-        {
-          "match": "^/gaming(/|$)",
-          "to": "/",
-          "toggle": "watch"
+          "toggle": "reels"
         }
       ],
       "allow": [
@@ -720,41 +715,22 @@
       "toggles": {
         "homefeed": {
           "label": "Hide News Feed",
-          "detail": "Home shows nothing to scroll. Groups, Marketplace, messages, events and profiles still work.",
+          "detail": "Home shows your stories and the composer, nothing to scroll. Groups, Marketplace, messages, events and profiles still work.",
           "default": true,
           "css": [
-            "html.feedoff-home [role='feed']",
-            "html.feedoff-home [data-pagelet^='FeedUnit']",
-            "html.feedoff-home div[data-pagelet='Feed']",
-            "html.feedoff-home div[data-pagelet='MainFeed']",
-            "html.feedoff-home [aria-label='Stories'] ~ div [role='article']",
-            "html.feedoff-home [role='main'] [role='article']",
-            "html.feedoff-home div[data-pagelet='Stories']"
+            "html.feedoff-home [data-type='vscroller'] > div[data-dcm-id]",
+            "html.feedoff-home [data-type='vscroller'] > div[data-tracking-duration-id]"
           ]
         },
         "reels": {
           "label": "Hide Reels",
-          "detail": "Removes the Reels tab, Reels in the feed and the Reels tray.",
+          "detail": "Removes the Reels tab and reels inside feeds.",
           "default": true,
           "css": [
-            "a[href^='/reel/']",
-            "a[href^='/reels/']",
-            "a[href*='/reels/?']",
-            "[aria-label='Reels']",
-            "[aria-label='Reels and short videos']",
-            "a[href^='/watch/']"
-          ]
-        },
-        "watch": {
-          "label": "Hide Watch & Video",
-          "detail": "Removes the Video tab and suggested videos.",
-          "default": true,
-          "css": [
-            "a[href^='/watch']",
-            "a[href^='/video']",
-            "[aria-label='Video']",
-            "[aria-label='Watch']",
-            "a[href^='/gaming']"
+            "[role='tab'][aria-label^='reels']",
+            "[role='tab'][aria-label^='Reels']",
+            "[data-type='vscroller'] > div:has([aria-label^='View reel video'])",
+            "[data-type='vscroller'] > div:has([aria-label^='Reels and short videos'])"
           ]
         },
         "suggested": {
@@ -764,11 +740,14 @@
           "css": [],
           "hideIfText": [
             {
-              "selector": "[role='article'], div[data-pagelet^='FeedUnit']",
+              "selector": "[data-type='vscroller'] > div[data-dcm-id]",
               "contains": [
-                "Suggested for you",
+                "People You May Know",
                 "People you may know",
+                "Suggested for you",
+                "Suggested Groups",
                 "Suggested groups",
+                "Suggested Pages",
                 "Suggested pages",
                 "Sponsored",
                 "Reels and short videos",
@@ -783,13 +762,13 @@
           ]
         },
         "apppromo": {
-          "label": "Hide 'Open App' prompts",
-          "detail": "Removes the banners pushing the Facebook app.",
+          "label": "Hide 'Open app' prompts",
+          "detail": "Removes the bar pushing the Facebook app.",
           "default": true,
           "css": [
+            "[aria-label='Open app']",
+            "[aria-label='Open App']",
             "a[href*='fb://']",
-            "div[data-sigil='m_login_upsell']",
-            "[data-testid='m_install_app_banner']",
             "a[href*='onelink.me']",
             "a[href*='app.link']"
           ]
