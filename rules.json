@@ -1,5 +1,5 @@
 {
-  "version": 19,
+  "version": 20,
   "minAppVersion": "1.0.0",
   "updatedAt": "2026-09-22",
   "platforms": {
@@ -728,9 +728,7 @@
           "default": true,
           "css": [
             "[role='tab'][aria-label^='reels']",
-            "[role='tab'][aria-label^='Reels']",
-            "[data-type='vscroller'] > div:has([aria-label^='View reel video'])",
-            "[data-type='vscroller'] > div:has([aria-label^='Reels and short videos'])"
+            "[data-type='vscroller'] > div:has([aria-label^='View reel video'])"
           ]
         },
         "suggested": {
