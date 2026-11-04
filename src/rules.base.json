@@ -1,5 +1,5 @@
 {
-  "version": 18,
+  "version": 19,
   "minAppVersion": "1.0.0",
   "updatedAt": "2026-09-22",
   "platforms": {
@@ -677,6 +677,127 @@
       "js": [
         "killInstallBanner",
         "linkedinHome"
+      ]
+    },
+    "facebook": {
+      "name": "Facebook",
+      "home": "https://www.facebook.com/",
+      "hosts": [
+        "facebook.com",
+        "fb.com",
+        "fbcdn.net",
+        "fbsbx.com",
+        "messenger.com"
+      ],
+      "redirects": [
+        {
+          "match": "^/reel(s)?(/|$)",
+          "to": "/",
+          "toggle": "reels"
+        },
+        {
+          "match": "^/watch(/|$)",
+          "to": "/",
+          "toggle": "watch"
+        },
+        {
+          "match": "^/gaming(/|$)",
+          "to": "/",
+          "toggle": "watch"
+        }
+      ],
+      "allow": [
+        {
+          "match": "^/reel/[0-9]+",
+          "note": "A single reel someone sent you stays watchable"
+        }
+      ],
+      "blockRequests": [
+        "*://*.doubleclick.net/*",
+        "*://www.facebook.com/tr*",
+        "*://*.googlesyndication.com/*"
+      ],
+      "toggles": {
+        "homefeed": {
+          "label": "Hide News Feed",
+          "detail": "Home shows nothing to scroll. Groups, Marketplace, messages, events and profiles still work.",
+          "default": true,
+          "css": [
+            "html.feedoff-home [role='feed']",
+            "html.feedoff-home [data-pagelet^='FeedUnit']",
+            "html.feedoff-home div[data-pagelet='Feed']",
+            "html.feedoff-home div[data-pagelet='MainFeed']",
+            "html.feedoff-home [aria-label='Stories'] ~ div [role='article']",
+            "html.feedoff-home [role='main'] [role='article']",
+            "html.feedoff-home div[data-pagelet='Stories']"
+          ]
+        },
+        "reels": {
+          "label": "Hide Reels",
+          "detail": "Removes the Reels tab, Reels in the feed and the Reels tray.",
+          "default": true,
+          "css": [
+            "a[href^='/reel/']",
+            "a[href^='/reels/']",
+            "a[href*='/reels/?']",
+            "[aria-label='Reels']",
+            "[aria-label='Reels and short videos']",
+            "a[href^='/watch/']"
+          ]
+        },
+        "watch": {
+          "label": "Hide Watch & Video",
+          "detail": "Removes the Video tab and suggested videos.",
+          "default": true,
+          "css": [
+            "a[href^='/watch']",
+            "a[href^='/video']",
+            "[aria-label='Video']",
+            "[aria-label='Watch']",
+            "a[href^='/gaming']"
+          ]
+        },
+        "suggested": {
+          "label": "Hide suggested content",
+          "detail": "Removes 'People you may know', suggested groups and pages, and sponsored posts inside groups.",
+          "default": true,
+          "css": [],
+          "hideIfText": [
+            {
+              "selector": "[role='article'], div[data-pagelet^='FeedUnit']",
+              "contains": [
+                "Suggested for you",
+                "People you may know",
+                "Suggested groups",
+                "Suggested pages",
+                "Sponsored",
+                "Reels and short videos",
+                "Suggested Reels"
+              ],
+              "maxTextLength": 6000,
+              "placeholder": {
+                "title": "Suggested content hidden by FeedOff",
+                "body": ""
+              }
+            }
+          ]
+        },
+        "apppromo": {
+          "label": "Hide 'Open App' prompts",
+          "detail": "Removes the banners pushing the Facebook app.",
+          "default": true,
+          "css": [
+            "a[href*='fb://']",
+            "div[data-sigil='m_login_upsell']",
+            "[data-testid='m_install_app_banner']",
+            "a[href*='onelink.me']",
+            "a[href*='app.link']"
+          ]
+        }
+      },
+      "js": [
+        "killInstallBanner",
+        "fbHome"
       ]
     }
   }

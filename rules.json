@@ -1,5 +1,5 @@
 {
-  "version": 18,
+  "version": 19,
   "minAppVersion": "1.0.0",
   "updatedAt": "2026-09-22",
   "platforms": {
@@ -678,9 +678,131 @@
         "killInstallBanner",
         "linkedinHome"
       ]
+    },
+    "facebook": {
+      "name": "Facebook",
+      "home": "https://www.facebook.com/",
+      "hosts": [
+        "facebook.com",
+        "fb.com",
+        "fbcdn.net",
+        "fbsbx.com",
+        "messenger.com"
+      ],
+      "redirects": [
+        {
+          "match": "^/reel(s)?(/|$)",
+          "to": "/",
+          "toggle": "reels"
+        },
+        {
+          "match": "^/watch(/|$)",
+          "to": "/",
+          "toggle": "watch"
+        },
+        {
+          "match": "^/gaming(/|$)",
+          "to": "/",
+          "toggle": "watch"
+        }
+      ],
+      "allow": [
+        {
+          "match": "^/reel/[0-9]+",
+          "note": "A single reel someone sent you stays watchable"
+        }
+      ],
+      "blockRequests": [
+        "*://*.doubleclick.net/*",
+        "*://www.facebook.com/tr*",
+        "*://*.googlesyndication.com/*"
+      ],
+      "toggles": {
+        "homefeed": {
+          "label": "Hide News Feed",
+          "detail": "Home shows nothing to scroll. Groups, Marketplace, messages, events and profiles still work.",
+          "default": true,
+          "css": [
+            "html.feedoff-home [role='feed']",
+            "html.feedoff-home [data-pagelet^='FeedUnit']",
+            "html.feedoff-home div[data-pagelet='Feed']",
+            "html.feedoff-home div[data-pagelet='MainFeed']",
+            "html.feedoff-home [aria-label='Stories'] ~ div [role='article']",
+            "html.feedoff-home [role='main'] [role='article']",
+            "html.feedoff-home div[data-pagelet='Stories']"
+          ]
+        },
+        "reels": {
+          "label": "Hide Reels",
+          "detail": "Removes the Reels tab, Reels in the feed and the Reels tray.",
+          "default": true,
+          "css": [
+            "a[href^='/reel/']",
+            "a[href^='/reels/']",
+            "a[href*='/reels/?']",
+            "[aria-label='Reels']",
+            "[aria-label='Reels and short videos']",
+            "a[href^='/watch/']"
+          ]
+        },
+        "watch": {
+          "label": "Hide Watch & Video",
+          "detail": "Removes the Video tab and suggested videos.",
+          "default": true,
+          "css": [
+            "a[href^='/watch']",
+            "a[href^='/video']",
+            "[aria-label='Video']",
+            "[aria-label='Watch']",
+            "a[href^='/gaming']"
+          ]
+        },
+        "suggested": {
+          "label": "Hide suggested content",
+          "detail": "Removes 'People you may know', suggested groups and pages, and sponsored posts inside groups.",
+          "default": true,
+          "css": [],
+          "hideIfText": [
+            {
+              "selector": "[role='article'], div[data-pagelet^='FeedUnit']",
+              "contains": [
+                "Suggested for you",
+                "People you may know",
+                "Suggested groups",
+                "Suggested pages",
+                "Sponsored",
+                "Reels and short videos",
+                "Suggested Reels"
+              ],
+              "maxTextLength": 6000,
+              "placeholder": {
+                "title": "Suggested content hidden by FeedOff",
+                "body": ""
+              }
+            }
+          ]
+        },
+        "apppromo": {
+          "label": "Hide 'Open App' prompts",
+          "detail": "Removes the banners pushing the Facebook app.",
+          "default": true,
+          "css": [
+            "a[href*='fb://']",
+            "div[data-sigil='m_login_upsell']",
+            "[data-testid='m_install_app_banner']",
+            "a[href*='onelink.me']",
+            "a[href*='app.link']"
+          ]
+        }
+      },
+      "js": [
+        "killInstallBanner",
+        "fbHome"
+      ]
     }
   },
   "jsLibrary": {
+    "fbHome": "// Facebook: mark the home page so its CSS can hide the News Feed, and show where to go instead.\n// Groups, Marketplace, Messenger, events, profiles and notifications keep working.\n(function () {\n  if (!/facebook\\.com$/.test(location.hostname)) return;\n  var FO = window.__feedoff;\n  function on() { return !FO || !FO.enabled || FO.enabled.indexOf('homefeed') !== -1; }\n  var ID = '__feedoff_fb_hint';\n  function isHome() { return /^\\/(home\\.php|\\?.*)?$/.test(location.pathname) || location.pathname === '/' ; }\n  function apply() {\n    var home = on() && isHome();\n    document.documentElement.classList.toggle('feedoff-home', home);\n    var hint = document.getElementById(ID);\n    if (home && !hint) {\n      var box = document.createElement('div');\n      box.id = ID;\n      box.style.cssText = 'position:fixed;left:16px;right:16px;top:45%;transform:translateY(-50%);padding:22px 18px;border-radius:16px;background:rgba(127,127,127,.12);text-align:center;font:15px/1.45 -apple-system,system-ui,sans-serif;color:inherit;z-index:2147483000;';\n      var t = document.createElement('div'); t.style.cssText = 'font-weight:700;font-size:17px;margin-bottom:6px;'; t.textContent = 'Feed hidden';\n      var s = document.createElement('div'); s.style.cssText = 'opacity:.75;margin-bottom:14px;'; s.textContent = 'In FeedOff, Facebook is for groups, Marketplace, messages and events. The News Feed stays off.';\n      var row = document.createElement('div'); row.style.cssText = 'display:flex;gap:8px;justify-content:center;flex-wrap:wrap;';\n      [['Groups', '/groups/'], ['Marketplace', '/marketplace/'], ['Messages', '/messages/'], ['Events', '/events/']].forEach(function (pair) {\n        var a = document.createElement('a'); a.href = pair[1]; a.textContent = pair[0];\n        a.style.cssText = 'display:inline-block;padding:9px 16px;border-radius:999px;background:#FF6B4A;color:#fff;font-weight:600;text-decoration:none;font-size:14px;';\n        row.appendChild(a);\n      });\n      box.appendChild(t); box.appendChild(s); box.appendChild(row);\n      document.body.appendChild(box);\n    } else if (!home && hint) {\n      hint.remove();\n    }\n  }\n  setTimeout(apply, 800);\n  FO && FO.onSweep(apply);\n  window.addEventListener('popstate', function () { setTimeout(apply, 50); });\n})();\n",
     "igHomeFeed": "// Instagram: with the \"feed\" toggle on, the home tab keeps the stories tray and nothing else.\n// The post list is the stories tray's sibling, so mark that container and let the CSS hide it.\n(function () {\n  if (!/instagram\\.com$/.test(location.hostname)) return;\n  var FO = window.__feedoff;\n  function on() { return !FO || !FO.enabled || FO.enabled.indexOf('feed') !== -1; }\n  var ID = '__feedoff_ig_hint';\n  function isHome() { return /^\\/?$/.test(location.pathname); }\n  function isTray(el) {\n    if (!el || el.matches('article') || el.querySelector('article')) return false;\n    return !!el.querySelector('a[href^=\"/stories/\"], canvas') || /your story/i.test(el.textContent || '');\n  }\n  function markFeed() {\n    var main = document.querySelector('main');\n    var art = main && main.querySelector('article');\n    if (!art) return false;\n    var el = art;\n    while (el.parentElement && el.parentElement !== main && !isTray(el.previousElementSibling)) el = el.parentElement;\n    if (el.parentElement === main || el === main) return false;\n    if (el.getAttribute('data-feedoff-feed') !== '1') el.setAttribute('data-feedoff-feed', '1');\n    return true;\n  }\n  function apply() {\n    var home = on() && isHome();\n    document.documentElement.classList.toggle('feedoff-ighome', home);\n    if (home) markFeed();\n    var hint = document.getElementById(ID);\n    if (home && !hint) {\n      var box = document.createElement('div');\n      box.id = ID;\n      box.style.cssText = 'position:fixed;left:16px;right:16px;top:50%;transform:translateY(-50%);padding:22px 18px;border-radius:16px;background:rgba(127,127,127,.12);text-align:center;font:15px/1.45 -apple-system,system-ui,sans-serif;color:inherit;z-index:2147483000;pointer-events:none;';\n      var t = document.createElement('div'); t.style.cssText = 'font-weight:700;font-size:17px;margin-bottom:6px;'; t.textContent = 'Feed hidden';\n      var s = document.createElement('div'); s.style.cssText = 'opacity:.75;'; s.textContent = 'Your stories, messages, profile and posting still work. Turn \"Hide the whole feed\" off in FeedOff settings to bring posts back.';\n      box.appendChild(t); box.appendChild(s);\n      document.body.appendChild(box);\n    } else if (!home && hint) {\n      hint.remove();\n    }\n  }\n  setTimeout(apply, 800);\n  FO && FO.onSweep(apply);\n  window.addEventListener('popstate', function () { setTimeout(apply, 50); });\n})();\n",
     "killInstallBanner": "// Remove \"Open in app\" / \"Use the app\" prompts on Instagram and YouTube mobile web.\n(function () {\n  const PHRASES = ['Open in app', 'Open app', 'Open App', 'Use the app', 'Use app', 'Open Instagram', 'Get the app', 'Get app', 'Use the LinkedIn app', 'Open TikTok', 'Get the full app experience'];\n  // Whole overlays/dialogs: hide the element itself.\n  const DIALOGS = [\n    'ytm-mealbar-promo-renderer',\n    'ytm-upsell-dialog-renderer',\n    '.upsell-dialog',\n    'ytm-app-upsell-renderer',\n    'configured-xpromo-modal',\n    'xpromo-nsfw-blocking-modal',\n  ];\n  // App-store / deep links: hide just the button wrapping them, never the bar they sit in.\n  const LINKS = [\n    'a[href^=\"intent://\"]',\n    'a[href*=\"apps.apple.com\"]',\n    'a[href*=\"itunes.apple.com\"]',\n    'a[href*=\"play.google.com/store\"]',\n    'a[href*=\"redirect_app_store_ios\"]',\n    'a[href^=\"instagram://\"]',\n    'a[href^=\"youtube://\"]',\n    'a[href^=\"vnd.youtube\"]',\n    'a[href*=\"applink.reddit.com\"]',\n    'a[href*=\"onelink.me\"]',\n    'a[href^=\"reddit://\"]',\n    'a[href^=\"twitter://\"]',\n    'a[href^=\"linkedin://\"]',\n    'a[href*=\"app.adjust.com\"]',\n  ];\n  function hide(el) {\n    if (!el || el.__foBanner) return;\n    el.__foBanner = true;\n    el.style.setProperty('display', 'none', 'important');\n  }\n  function buttonShell(el) {\n    return el.closest('ytm-button-renderer, button, [role=\"button\"]') || el;\n  }\n  // A sticky/fixed bar or dialog wrapping an app prompt is the thing to hide, not just its label.\n  function bannerRoot(el) {\n    let n = el;\n    for (let i = 0; i < 6 && n && n !== document.body; i++) {\n      const pos = getComputedStyle(n).position;\n      if (pos === 'fixed' || pos === 'sticky') return n;\n      if (n.getAttribute && (n.getAttribute('role') === 'dialog' || n.getAttribute('role') === 'alertdialog')) return n;\n      n = n.parentElement;\n    }\n    return el;\n  }\n  function sweep() {\n    for (const sel of DIALOGS) document.querySelectorAll(sel).forEach(hide);\n    for (const sel of LINKS) document.querySelectorAll(sel).forEach((el) => hide(buttonShell(el)));\n    document.querySelectorAll('button, a, div[role=\"button\"]').forEach((el) => {\n      if (el.__foChecked) return;\n      const t = (el.textContent || '').trim();\n      if (t.length > 40) return;\n      el.__foChecked = true;\n      if (PHRASES.some((p) => t === p)) hide(bannerRoot(buttonShell(el)));\n    });\n  }\n  window.__feedoff && window.__feedoff.onSweep(sweep);\n  sweep();\n})();\n",
     "linkedinHome": "// LinkedIn: mark the Home feed page so its CSS can hide the feed, and show a hint where it was.\n(function () {\n  if (!/linkedin\\.com$/.test(location.hostname)) return;\n  var FO = window.__feedoff;\n  function on() { return !FO || !FO.enabled || FO.enabled.indexOf('homefeed') !== -1; }\n  var ID = '__feedoff_li_hint';\n  function isHome() { return /^\\/(feed\\/?|)$/.test(location.pathname) || /^\\/feed\\/(update|hashtag)?\\/?$/.test(location.pathname); }\n  function apply() {\n    var home = on() && isHome();\n    document.documentElement.classList.toggle('feedoff-home', home);\n    var hint = document.getElementById(ID);\n    if (home && !hint) {\n      var box = document.createElement('div');\n      box.id = ID;\n      box.style.cssText = 'position:fixed;left:16px;right:16px;top:40%;transform:translateY(-50%);padding:22px 18px;border-radius:16px;background:rgba(127,127,127,.12);text-align:center;font:15px/1.45 -apple-system,system-ui,sans-serif;color:inherit;z-index:2147483000;';\n      var t = document.createElement('div'); t.style.cssText = 'font-weight:700;font-size:17px;margin-bottom:6px;'; t.textContent = 'Feed hidden';\n      var s = document.createElement('div'); s.style.cssText = 'opacity:.75;margin-bottom:14px;'; s.textContent = 'In FeedOff, LinkedIn is for messages, notifications, jobs and people. The feed stays off.';\n      var row = document.createElement('div'); row.style.cssText = 'display:flex;gap:8px;justify-content:center;flex-wrap:wrap;';\n      [['Messages', '/messaging/'], ['Notifications', '/notifications/'], ['Jobs', '/jobs/']].forEach(function (pair) {\n        var a = document.createElement('a'); a.href = pair[1]; a.textContent = pair[0];\n        a.style.cssText = 'display:inline-block;padding:9px 16px;border-radius:999px;background:#FF6B4A;color:#fff;font-weight:600;text-decoration:none;font-size:14px;';\n        row.appendChild(a);\n      });\n      box.appendChild(t); box.appendChild(s); box.appendChild(row);\n      document.body.appendChild(box);\n    } else if (!home && hint) {\n      hint.remove();\n    }\n  }\n  setTimeout(apply, 800);\n  FO && FO.onSweep(apply);\n  window.addEventListener('popstate', function () { setTimeout(apply, 50); });\n})();\n",
