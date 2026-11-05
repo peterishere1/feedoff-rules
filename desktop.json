@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "minExtensionVersion": "1.0.0",
   "updatedAt": "2026-11-04",
   "platforms": {
@@ -174,7 +174,10 @@
             "html.feedoff-explore div[data-testid='cellInnerDiv']:has([data-testid='tweet'])",
             "html.feedoff-explore [data-testid='primaryColumn'] [role='tablist']:has([role='tab'])",
             "[aria-label='Timeline: Trending now']",
-            "[aria-label='Who to follow']"
+            "[aria-label='Who to follow']",
+            "[data-testid='sidebarColumn'] [aria-label='Trending']",
+            "[data-testid='sidebarColumn'] div:has(> [data-testid^='news_sidebar_article'])",
+            "html.feedoff-explore [data-testid='primaryColumn'] div[data-testid='cellInnerDiv']"
           ]
         },
         "promoted": {

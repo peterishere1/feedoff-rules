@@ -16,7 +16,7 @@ const cookieFile = ci !== -1 ? process.argv[ci + 1] : null;
 // Or --tokens: paste the session cookies from a browser you are already logged in on (X blocks
 // logins made inside an automated browser). Input is hidden and never echoed.
 const useTokens = process.argv.includes('--tokens');
-const TOKENS = { x: { domain: '.x.com', names: ['auth_token', 'ct0'] } };
+const TOKENS = { x: { domain: '.x.com', names: ['auth_token', 'ct0'], lengths: { auth_token: 40, ct0: 160 } } };
 const rules = JSON.parse(readFileSync(join(here, '../rules.json'), 'utf8'));
 const p = rules.platforms[platform];
 if (!p) { console.error('unknown platform; one of', Object.keys(rules.platforms).join(', ')); process.exit(1); }
@@ -44,8 +44,12 @@ if (useTokens) {
   });
   const cookies = [];
   for (const name of spec.names) {
-    const value = await ask(name);
+    let value = await ask(name);
     if (!value) { console.error(`${name} is required`); process.exit(1); }
+    // Some terminals deliver a paste more than once; a known-length token is cut back to one copy.
+    const want = spec.lengths && spec.lengths[name];
+    if (want && value.length > want) { console.log(`${name}: got ${value.length} characters, keeping the first ${want}`); value = value.slice(0, want); }
+    if (want && value.length < want) console.log(`${name}: expected ${want} characters, got ${value.length}; X may reject it`);
     cookies.push({ name, value, domain: spec.domain, path: '/', secure: true, httpOnly: name === 'auth_token', sameSite: 'None', expires: Math.floor(Date.now() / 1000) + 180 * 86400 });
   }
   mkdirSync(join(here, '../.state'), { recursive: true });

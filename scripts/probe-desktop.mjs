@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 const [url, ...sels] = process.argv.slice(2);
 const stateEnv = Object.entries(process.env).find(([k]) => k.startsWith('FEEDOFF_STATE_') && url.includes(k.replace('FEEDOFF_STATE_', '').toLowerCase()));
 const browser = await (process.env.BROWSER === 'webkit' ? webkit : chromium).launch();
-const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, storageState: stateEnv ? JSON.parse(stateEnv[1]) : undefined, locale: 'en-US' });
+const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', storageState: stateEnv ? JSON.parse(stateEnv[1]) : undefined, locale: 'en-US' });
 const page = await ctx.newPage();
 await page.goto(url, { waitUntil: 'domcontentloaded' });
 await page.waitForTimeout(Number(process.env.WAIT || 6000));
