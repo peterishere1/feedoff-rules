@@ -1,0 +1,235 @@
+{
+  "version": 1,
+  "minExtensionVersion": "1.0.0",
+  "updatedAt": "2026-11-04",
+  "platforms": {
+    "youtube": {
+      "name": "YouTube",
+      "home": "https://www.youtube.com/feed/subscriptions",
+      "hosts": [
+        "youtube.com",
+        "www.youtube.com"
+      ],
+      "redirects": [
+        {
+          "match": "^/shorts(/|$)",
+          "to": "/feed/subscriptions",
+          "toggle": "shorts"
+        },
+        {
+          "match": "^/?$",
+          "to": "/feed/subscriptions",
+          "toggle": "homefeed"
+        },
+        {
+          "match": "^/feed/explore(/|$)",
+          "to": "/feed/subscriptions",
+          "toggle": "homefeed"
+        },
+        {
+          "match": "^/feed/trending(/|$)",
+          "to": "/feed/subscriptions",
+          "toggle": "homefeed"
+        }
+      ],
+      "allow": [],
+      "toggles": {
+        "shorts": {
+          "label": "Hide Shorts",
+          "detail": "Removes the Shorts entry, Shorts shelves and Shorts results everywhere.",
+          "default": true,
+          "css": [
+            "ytd-rich-shelf-renderer[is-shorts]",
+            "ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[is-shorts])",
+            "ytd-reel-shelf-renderer",
+            "ytd-rich-item-renderer:has(a[href^='/shorts/'])",
+            "ytd-video-renderer:has(a[href^='/shorts/'])",
+            "grid-shelf-view-model:has(ytm-shorts-lockup-view-model-v2)",
+            "ytd-guide-entry-renderer:has(a[title='Shorts'])",
+            "ytd-mini-guide-entry-renderer[aria-label='Shorts']",
+            "ytd-mini-guide-entry-renderer:has(a[title='Shorts'])",
+            "ytm-shorts-lockup-view-model-v2",
+            "ytd-compact-video-renderer:has(a[href^='/shorts/'])",
+            "yt-lockup-view-model:has(a[href^='/shorts/'])"
+          ]
+        },
+        "homefeed": {
+          "label": "Hide Home feed",
+          "detail": "Home opens your Subscriptions instead of recommendations.",
+          "default": true,
+          "css": [
+            "ytd-browse[page-subtype='home'] ytd-rich-grid-renderer",
+            "ytd-browse[page-subtype='home'] ytd-feed-filter-chip-bar-renderer",
+            "ytd-guide-entry-renderer:has(a[title='Home'])",
+            "ytd-mini-guide-entry-renderer[aria-label='Home']",
+            "ytd-mini-guide-entry-renderer:has(a[title='Home'])"
+          ]
+        },
+        "related": {
+          "label": "Hide related videos",
+          "detail": "Removes the 'Up next' list beside a video. Playlists still show.",
+          "default": false,
+          "css": [
+            "#secondary ytd-watch-next-secondary-results-renderer #related > ytd-item-section-renderer",
+            "ytd-watch-next-secondary-results-renderer #related > #items > ytd-item-section-renderer",
+            "ytd-watch-flexy #related ytd-item-section-renderer"
+          ]
+        },
+        "comments": {
+          "label": "Hide comments",
+          "detail": "Removes the comments section under a video.",
+          "default": false,
+          "css": [
+            "ytd-comments#comments"
+          ]
+        },
+        "ads": {
+          "label": "Hide ads",
+          "detail": "Hides promoted videos in feeds and search, and skips video ads as soon as the player allows.",
+          "default": true,
+          "css": [
+            "ytd-ad-slot-renderer",
+            "ytd-rich-item-renderer:has(ytd-ad-slot-renderer)",
+            "ytd-in-feed-ad-layout-renderer",
+            "ytd-promoted-sparkles-web-renderer",
+            "ytd-promoted-video-renderer",
+            "ytd-display-ad-renderer",
+            "ytd-statement-banner-renderer",
+            "ytd-banner-promo-renderer",
+            "ytd-companion-slot-renderer",
+            "ytd-merch-shelf-renderer",
+            "#masthead-ad",
+            "#player-ads",
+            ".ytp-ad-overlay-container",
+            ".ytp-ad-text-overlay",
+            "ytd-engagement-panel-section-list-renderer[target-id='engagement-panel-ads']",
+            "ytd-search ytd-item-section-renderer > #contents > ytd-ad-slot-renderer"
+          ]
+        }
+      },
+      "js": [
+        "noAutoplayNext",
+        "ytAdSkip",
+        "ytHomeDesktop"
+      ]
+    },
+    "x": {
+      "name": "X",
+      "home": "https://x.com/home",
+      "hosts": [
+        "x.com",
+        "twitter.com"
+      ],
+      "redirects": [
+        {
+          "match": "^/i/trending",
+          "to": "/home",
+          "toggle": "trending"
+        },
+        {
+          "match": "^/explore/tabs",
+          "to": "/explore",
+          "toggle": "trending"
+        },
+        {
+          "match": "^/i/grok",
+          "to": "/home",
+          "toggle": "extras"
+        },
+        {
+          "match": "^/i/premium",
+          "to": "/home",
+          "toggle": "extras"
+        },
+        {
+          "match": "^/i/videos",
+          "to": "/home",
+          "toggle": "foryou"
+        }
+      ],
+      "allow": [],
+      "toggles": {
+        "foryou": {
+          "label": "Following only",
+          "detail": "Home opens on the Following tab. The For You tab is hidden.",
+          "default": true,
+          "css": [
+            "a[href='/i/videos']",
+            "a[data-testid='AppTabBar_Videos_Link']"
+          ]
+        },
+        "trending": {
+          "label": "Hide trends, news & Who to follow",
+          "detail": "Clears the right-hand column and the Explore page down to search.",
+          "default": true,
+          "css": [
+            "[data-testid='sidebarColumn'] [aria-label='Timeline: Trending now']",
+            "[data-testid='sidebarColumn'] aside[aria-label='Who to follow']",
+            "[data-testid='sidebarColumn'] aside[aria-label='Relevant people']",
+            "[data-testid='sidebarColumn'] [data-testid='trend']",
+            "[data-testid='sidebarColumn'] div:has(> div > [data-testid='UserCell'])",
+            "div[data-testid='cellInnerDiv']:has([data-testid='trend'])",
+            "div[data-testid='cellInnerDiv']:has([data-testid='UserCell'])",
+            "div[data-testid='cellInnerDiv']:has([data-testid='eventHero'])",
+            "html.feedoff-explore div[data-testid='cellInnerDiv']:has([data-testid='tweet'])",
+            "html.feedoff-explore [data-testid='primaryColumn'] [role='tablist']:has([role='tab'])",
+            "[aria-label='Timeline: Trending now']",
+            "[aria-label='Who to follow']"
+          ]
+        },
+        "promoted": {
+          "label": "Hide promoted posts",
+          "detail": "Removes ads from the timeline.",
+          "default": true,
+          "css": [
+            "[data-testid='sidebarColumn'] [data-testid='placementTracking']"
+          ],
+          "hideIfText": [
+            {
+              "selector": "div[data-testid='cellInnerDiv']",
+              "contains": [],
+              "exact": [
+                "Ad",
+                "Promoted"
+              ],
+              "leaf": "span",
+              "placeholder": {
+                "title": "Ad hidden by FeedOff",
+                "body": ""
+              }
+            }
+          ]
+        },
+        "extras": {
+          "label": "Hide Grok, Communities & Premium",
+          "detail": "Removes the Grok, Communities, Premium, Jobs and Verified Orgs entries and the Premium upsell.",
+          "default": true,
+          "css": [
+            "a[href='/i/grok']",
+            "a[href*='/i/grok']",
+            "[data-testid='AppTabBar_Grok_Link']",
+            "a[href*='/communities']",
+            "a[href*='/i/premium']",
+            "a[href*='/i/verified-orgs']",
+            "a[href*='/i/monetization']",
+            "a[href*='/jobs']",
+            "[data-testid='GrokDrawer']",
+            "[data-testid='grokImgGen']",
+            "[data-testid='sidebarColumn'] [data-testid='super-upsell-UpsellCardRenderProperties']",
+            "[data-testid='sidebarColumn'] aside:has(a[href*='/i/premium'])",
+            "div[data-testid='cellInnerDiv']:has(a[href*='/i/premium'])"
+          ]
+        }
+      },
+      "js": [
+        "xFollowingOnly"
+      ]
+    }
+  },
+  "jsLibrary": {
+    "noAutoplayNext": "// YouTube desktop: pause when a video ends and keep the Autoplay toggle off.\n(function () {\n  if (!/youtube\\.com$/.test(location.hostname)) return;\n  function killAutonav() {\n    document.querySelectorAll('.ytp-autonav-toggle-button[aria-checked=\"true\"]').forEach((b) => { try { b.click(); } catch (_) {} });\n  }\n  function hook(video) {\n    if (video.__foHooked) return;\n    video.__foHooked = true;\n    video.addEventListener('ended', () => { try { video.pause(); } catch (_) {} killAutonav(); });\n  }\n  function sweep() { document.querySelectorAll('video').forEach(hook); killAutonav(); }\n  window.__feedoff && window.__feedoff.onSweep(sweep);\n  sweep();\n})();\n",
+    "xFollowingOnly": "// X: open Home on \"Following\", hide the \"For you\" tab, and mark the Explore page for CSS scoping.\n(function () {\n  if (!/(^|\\.)x\\.com$|twitter\\.com$/.test(location.hostname)) return;\n  var FO = window.__feedoff;\n  function on() { return !FO || !FO.enabled || FO.enabled.indexOf('foryou') !== -1; }\n  var last = 0;\n  function tabs() {\n    var all = document.querySelectorAll('[role=\"tab\"]');\n    var forYou = null, following = null;\n    all.forEach(function (t) {\n      var txt = (t.textContent || '').trim().toLowerCase();\n      if (txt === 'for you') forYou = t; else if (txt === 'following') following = t;\n    });\n    return { forYou: forYou, following: following };\n  }\n  function check() {\n    document.documentElement.classList.toggle('feedoff-explore', /^\\/explore/.test(location.pathname));\n    if (!on() || !/^\\/home\\/?$/.test(location.pathname)) return;\n    var t = tabs(); if (!t.forYou || !t.following) return;\n    if (t.forYou.getAttribute('aria-selected') === 'true') {\n      var now = Date.now(); if (now - last < 1500) return; last = now;\n      try { t.following.click(); } catch (e) {}\n    }\n    t.forYou.style.setProperty('display', 'none', 'important');\n  }\n  setTimeout(check, 1200);\n  FO && FO.onSweep(check);\n  window.addEventListener('popstate', function () { setTimeout(check, 100); });\n})();\n",
+    "ytAdSkip": "// YouTube: if an ad still plays, mute it and jump to its end; click Skip/close when offered.\n(function () {\n  if (!/youtube\\.com$/.test(location.hostname)) return;\n  var FO = window.__feedoff;\n  function on() { return !FO || !FO.enabled || FO.enabled.indexOf('ads') !== -1; }\n  var wasMuted = null;\n  function tick() {\n    if (!on()) return;\n    var ad = document.querySelector('.ad-showing, .ad-interrupting, .ytp-ad-player-overlay, ytm-player-ad-overlay, .ytp-ad-preview-container');\n    var v = document.querySelector('video');\n    if (ad && v) {\n      if (wasMuted === null) wasMuted = v.muted;\n      v.muted = true;\n      if (isFinite(v.duration) && v.duration > 0) { try { v.currentTime = v.duration; } catch (e) {} }\n      try { v.playbackRate = 16; } catch (e) {}\n    } else if (v && wasMuted !== null) {\n      v.muted = wasMuted; wasMuted = null;\n      try { if (v.playbackRate === 16) v.playbackRate = 1; } catch (e) {}\n    }\n    var skip = document.querySelector('.ytp-ad-skip-button, .ytp-ad-skip-button-modern, .ytp-skip-ad-button, button.ytm-skip-ad-button, [class*=\"skip-button\"], [id*=\"skip-button\"]');\n    if (skip) { try { skip.click(); } catch (e) {} }\n    var close = document.querySelector('.ytp-ad-overlay-close-button, .ytm-ad-overlay-close');\n    if (close) { try { close.click(); } catch (e) {} }\n  }\n  setInterval(tick, 400);\n  FO && FO.onSweep(tick);\n})();\n",
+    "ytHomeDesktop": "// YouTube desktop: when the Home feed is hidden, show a small card on / pointing to Subscriptions\n// (the redirect handles most visits; this covers in-page navigation back to the logo).\n(function () {\n  if (!/youtube\\.com$/.test(location.hostname)) return;\n  var FO = window.__feedoff;\n  var ID = '__feedoff_yt_home_hint';\n  function on() { return !FO || !FO.enabled || FO.enabled.indexOf('homefeed') !== -1; }\n  function check() {\n    var onHome = location.pathname === '/' && on();\n    document.documentElement.classList.toggle('feedoff-home', onHome);\n    var box = document.getElementById(ID);\n    if (!onHome) { if (box) box.remove(); return; }\n    if (box) return;\n    box = document.createElement('div'); box.id = ID;\n    box.style.cssText = 'position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);max-width:420px;padding:26px 28px;border-radius:18px;background:rgba(127,127,127,.12);text-align:center;font:15px/1.45 system-ui,sans-serif;color:inherit;z-index:2147483000;';\n    var t = document.createElement('div'); t.style.cssText = 'font-weight:700;font-size:18px;margin-bottom:6px;'; t.textContent = 'Home feed hidden';\n    var s = document.createElement('div'); s.style.cssText = 'opacity:.75;margin-bottom:16px;'; s.textContent = 'FeedOff keeps YouTube to what you follow and what you search for.';\n    var a = document.createElement('a'); a.href = '/feed/subscriptions'; a.textContent = 'Go to Subscriptions';\n    a.style.cssText = 'display:inline-block;padding:10px 22px;border-radius:999px;background:#FF6B4A;color:#fff;font-weight:600;text-decoration:none;';\n    box.appendChild(t); box.appendChild(s); box.appendChild(a);\n    document.body.appendChild(box);\n  }\n  setTimeout(check, 500);\n  FO && FO.onSweep(check);\n  window.addEventListener('popstate', function () { setTimeout(check, 100); });\n})();\n"
+  }
+}

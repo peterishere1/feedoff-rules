@@ -1,0 +1,168 @@
+{
+  "version": 1,
+  "minExtensionVersion": "1.0.0",
+  "updatedAt": "2026-11-04",
+  "platforms": {
+    "youtube": {
+      "name": "YouTube",
+      "home": "https://www.youtube.com/feed/subscriptions",
+      "hosts": ["youtube.com", "www.youtube.com"],
+      "redirects": [
+        { "match": "^/shorts(/|$)", "to": "/feed/subscriptions", "toggle": "shorts" },
+        { "match": "^/?$", "to": "/feed/subscriptions", "toggle": "homefeed" },
+        { "match": "^/feed/explore(/|$)", "to": "/feed/subscriptions", "toggle": "homefeed" },
+        { "match": "^/feed/trending(/|$)", "to": "/feed/subscriptions", "toggle": "homefeed" }
+      ],
+      "allow": [],
+      "toggles": {
+        "shorts": {
+          "label": "Hide Shorts",
+          "detail": "Removes the Shorts entry, Shorts shelves and Shorts results everywhere.",
+          "default": true,
+          "css": [
+            "ytd-rich-shelf-renderer[is-shorts]",
+            "ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[is-shorts])",
+            "ytd-reel-shelf-renderer",
+            "ytd-rich-item-renderer:has(a[href^='/shorts/'])",
+            "ytd-video-renderer:has(a[href^='/shorts/'])",
+            "grid-shelf-view-model:has(ytm-shorts-lockup-view-model-v2)",
+            "ytd-guide-entry-renderer:has(a[title='Shorts'])",
+            "ytd-mini-guide-entry-renderer[aria-label='Shorts']",
+            "ytd-mini-guide-entry-renderer:has(a[title='Shorts'])",
+            "ytm-shorts-lockup-view-model-v2",
+            "ytd-compact-video-renderer:has(a[href^='/shorts/'])",
+            "yt-lockup-view-model:has(a[href^='/shorts/'])"
+          ]
+        },
+        "homefeed": {
+          "label": "Hide Home feed",
+          "detail": "Home opens your Subscriptions instead of recommendations.",
+          "default": true,
+          "css": [
+            "ytd-browse[page-subtype='home'] ytd-rich-grid-renderer",
+            "ytd-browse[page-subtype='home'] ytd-feed-filter-chip-bar-renderer",
+            "ytd-guide-entry-renderer:has(a[title='Home'])",
+            "ytd-mini-guide-entry-renderer[aria-label='Home']",
+            "ytd-mini-guide-entry-renderer:has(a[title='Home'])"
+          ]
+        },
+        "related": {
+          "label": "Hide related videos",
+          "detail": "Removes the 'Up next' list beside a video. Playlists still show.",
+          "default": false,
+          "css": [
+            "#secondary ytd-watch-next-secondary-results-renderer #related > ytd-item-section-renderer",
+            "ytd-watch-next-secondary-results-renderer #related > #items > ytd-item-section-renderer",
+            "ytd-watch-flexy #related ytd-item-section-renderer"
+          ]
+        },
+        "comments": {
+          "label": "Hide comments",
+          "detail": "Removes the comments section under a video.",
+          "default": false,
+          "css": ["ytd-comments#comments"]
+        },
+        "ads": {
+          "label": "Hide ads",
+          "detail": "Hides promoted videos in feeds and search, and skips video ads as soon as the player allows.",
+          "default": true,
+          "css": [
+            "ytd-ad-slot-renderer",
+            "ytd-rich-item-renderer:has(ytd-ad-slot-renderer)",
+            "ytd-in-feed-ad-layout-renderer",
+            "ytd-promoted-sparkles-web-renderer",
+            "ytd-promoted-video-renderer",
+            "ytd-display-ad-renderer",
+            "ytd-statement-banner-renderer",
+            "ytd-banner-promo-renderer",
+            "ytd-companion-slot-renderer",
+            "ytd-merch-shelf-renderer",
+            "#masthead-ad",
+            "#player-ads",
+            ".ytp-ad-overlay-container",
+            ".ytp-ad-text-overlay",
+            "ytd-engagement-panel-section-list-renderer[target-id='engagement-panel-ads']",
+            "ytd-search ytd-item-section-renderer > #contents > ytd-ad-slot-renderer"
+          ]
+        }
+      },
+      "js": ["noAutoplayNext", "ytAdSkip", "ytHomeDesktop"]
+    },
+    "x": {
+      "name": "X",
+      "home": "https://x.com/home",
+      "hosts": ["x.com", "twitter.com"],
+      "redirects": [
+        { "match": "^/i/trending", "to": "/home", "toggle": "trending" },
+        { "match": "^/explore/tabs", "to": "/explore", "toggle": "trending" },
+        { "match": "^/i/grok", "to": "/home", "toggle": "extras" },
+        { "match": "^/i/premium", "to": "/home", "toggle": "extras" },
+        { "match": "^/i/videos", "to": "/home", "toggle": "foryou" }
+      ],
+      "allow": [],
+      "toggles": {
+        "foryou": {
+          "label": "Following only",
+          "detail": "Home opens on the Following tab. The For You tab is hidden.",
+          "default": true,
+          "css": ["a[href='/i/videos']", "a[data-testid='AppTabBar_Videos_Link']"]
+        },
+        "trending": {
+          "label": "Hide trends, news & Who to follow",
+          "detail": "Clears the right-hand column and the Explore page down to search.",
+          "default": true,
+          "css": [
+            "[data-testid='sidebarColumn'] [aria-label='Timeline: Trending now']",
+            "[data-testid='sidebarColumn'] aside[aria-label='Who to follow']",
+            "[data-testid='sidebarColumn'] aside[aria-label='Relevant people']",
+            "[data-testid='sidebarColumn'] [data-testid='trend']",
+            "[data-testid='sidebarColumn'] div:has(> div > [data-testid='UserCell'])",
+            "div[data-testid='cellInnerDiv']:has([data-testid='trend'])",
+            "div[data-testid='cellInnerDiv']:has([data-testid='UserCell'])",
+            "div[data-testid='cellInnerDiv']:has([data-testid='eventHero'])",
+            "html.feedoff-explore div[data-testid='cellInnerDiv']:has([data-testid='tweet'])",
+            "html.feedoff-explore [data-testid='primaryColumn'] [role='tablist']:has([role='tab'])",
+            "[aria-label='Timeline: Trending now']",
+            "[aria-label='Who to follow']"
+          ]
+        },
+        "promoted": {
+          "label": "Hide promoted posts",
+          "detail": "Removes ads from the timeline.",
+          "default": true,
+          "css": ["[data-testid='sidebarColumn'] [data-testid='placementTracking']"],
+          "hideIfText": [
+            {
+              "selector": "div[data-testid='cellInnerDiv']",
+              "contains": [],
+              "exact": ["Ad", "Promoted"],
+              "leaf": "span",
+              "placeholder": { "title": "Ad hidden by FeedOff", "body": "" }
+            }
+          ]
+        },
+        "extras": {
+          "label": "Hide Grok, Communities & Premium",
+          "detail": "Removes the Grok, Communities, Premium, Jobs and Verified Orgs entries and the Premium upsell.",
+          "default": true,
+          "css": [
+            "a[href='/i/grok']",
+            "a[href*='/i/grok']",
+            "[data-testid='AppTabBar_Grok_Link']",
+            "a[href*='/communities']",
+            "a[href*='/i/premium']",
+            "a[href*='/i/verified-orgs']",
+            "a[href*='/i/monetization']",
+            "a[href*='/jobs']",
+            "[data-testid='GrokDrawer']",
+            "[data-testid='grokImgGen']",
+            "[data-testid='sidebarColumn'] [data-testid='super-upsell-UpsellCardRenderProperties']",
+            "[data-testid='sidebarColumn'] aside:has(a[href*='/i/premium'])",
+            "div[data-testid='cellInnerDiv']:has(a[href*='/i/premium'])"
+          ]
+        }
+      },
+      "js": ["xFollowingOnly"]
+    }
+  }
+}

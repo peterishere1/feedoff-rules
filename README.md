@@ -5,6 +5,8 @@ YouTube, X, Reddit and LinkedIn without their feeds. This folder is published fr
 repository to [github.com/peterishere1/feedoff-rules](https://github.com/peterishere1/feedoff-rules)
 so anyone can read what the app hides and send a fix when a site changes. MIT licensed.
 
+`desktop.json` is the same thing for the Chrome extension (desktop sites; built from `src/desktop.base.json` + `src/js-desktop/`, which overrides `src/js/` per file). It is fetched from `https://feedoff.app/v1/desktop.json` hourly; its `jsLibrary` is bundled into the extension at build time and never executed from the download.
+
 `rules.json` is the only thing the FeedOff app downloads. It tells the app which parts of
 Instagram and YouTube's mobile sites to hide, which paths to redirect, and which requests to
 block. It is bundled into the app as a fallback and fetched from
@@ -12,10 +14,12 @@ block. It is bundled into the app as a fallback and fetched from
 
 ## Layout
 
-- `src/rules.base.json`: the rules, hand-edited
+- `src/rules.base.json`: the rules, hand-edited (`src/desktop.base.json` for the Chrome extension)
 - `src/js/*.js`: small page behaviours referenced by name from `platforms.<id>.js`
 - `build.mjs`: inlines the JS into `rules.json` and validates the file
 - `scripts/check-selectors.mjs`: nightly Playwright check that every selector still matches
+- `scripts/check-extension.mjs`: loads the built Chrome extension in Chromium and checks the desktop rules
+- `scripts/probe-desktop.mjs`: structure-only DOM census of a desktop page for writing new selectors
 
 ## Editing a rule
 

@@ -9,7 +9,7 @@ mkdir -p report
 for p in instagram youtube x reddit linkedin facebook; do
   f=".state/$p.json"; [ -f "$f" ] && export "FEEDOFF_STATE_$(echo $p | tr a-z A-Z)=$(cat "$f")"
 done
-if node scripts/check-selectors.mjs > report/local.log 2>&1; then
+if node scripts/check-selectors.mjs > report/local.log 2>&1 && node scripts/check-extension.mjs >> report/local.log 2>&1; then
   echo "$(date) ok" >> report/local-history.log
 else
   echo "$(date) FAIL" >> report/local-history.log

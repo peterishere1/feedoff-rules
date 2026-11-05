@@ -1,29 +1,45 @@
 #!/usr/bin/env node
-// Assemble rules/rules.json from rules/src/rules.base.json + rules/src/js/*.js
-import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
+// Assemble rules/rules.json (iPhone app, mobile sites) and rules/desktop.json (Chrome extension,
+// desktop sites) from rules/src/*.base.json + rules/src/js*/ *.js.
+import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const base = JSON.parse(readFileSync(join(here, 'src/rules.base.json'), 'utf8'));
-const jsDir = join(here, 'src/js');
-const jsLibrary = {};
-for (const f of readdirSync(jsDir).filter((f) => f.endsWith('.js')).sort()) {
-  jsLibrary[basename(f, '.js')] = readFileSync(join(jsDir, f), 'utf8');
+
+function loadJs(dirs) {
+  // Earlier dirs win: js-desktop/noAutoplayNext.js overrides js/noAutoplayNext.js for the desktop build.
+  const lib = {};
+  for (const dir of dirs.slice().reverse()) {
+    if (!existsSync(dir)) continue;
+    for (const f of readdirSync(dir).filter((f) => f.endsWith('.js')).sort()) lib[basename(f, '.js')] = readFileSync(join(dir, f), 'utf8');
+  }
+  return lib;
 }
-// Every js behaviour referenced by a platform must exist.
-for (const [id, p] of Object.entries(base.platforms)) {
-  for (const name of p.js || []) {
-    if (!jsLibrary[name]) throw new Error(`${id} references missing js behaviour "${name}"`);
+
+function build(baseFile, outFile, jsDirs) {
+  const base = JSON.parse(readFileSync(join(here, baseFile), 'utf8'));
+  const jsLibrary = loadJs(jsDirs.map((d) => join(here, d)));
+  const used = new Set();
+  for (const [id, p] of Object.entries(base.platforms)) {
+    for (const name of [...(p.js || []), ...(p.jsAtStart || [])]) {
+      if (!jsLibrary[name]) throw new Error(`${id} references missing js behaviour "${name}"`);
+      used.add(name);
+    }
+    for (const [tid, t] of Object.entries(p.toggles || {})) {
+      if (typeof t.label !== 'string' || typeof t.default !== 'boolean') throw new Error(`${id}.${tid}: label/default required`);
+    }
+    for (const r of p.redirects || []) {
+      new RegExp(r.match); // throws on invalid regex
+      if (r.toggle && !p.toggles[r.toggle]) throw new Error(`${id}: redirect toggle "${r.toggle}" is not a toggle`);
+    }
   }
-  for (const [tid, t] of Object.entries(p.toggles || {})) {
-    if (typeof t.label !== 'string' || typeof t.default !== 'boolean') throw new Error(`${id}.${tid}: label/default required`);
-  }
-  for (const r of p.redirects || []) {
-    new RegExp(r.match); // throws on invalid regex
-    if (r.toggle && !p.toggles[r.toggle]) throw new Error(`${id}: redirect toggle "${r.toggle}" is not a toggle`);
-  }
+  // Only ship the behaviours a platform in this file references.
+  const lib = Object.fromEntries(Object.entries(jsLibrary).filter(([k]) => used.has(k)));
+  const out = { ...base, jsLibrary: lib };
+  writeFileSync(join(here, outFile), JSON.stringify(out, null, 2) + '\n');
+  console.log(`${outFile} v${out.version}: ${Object.keys(out.platforms).length} platforms, ${Object.keys(lib).length} js behaviours`);
 }
-const out = { ...base, jsLibrary };
-writeFileSync(join(here, 'rules.json'), JSON.stringify(out, null, 2) + '\n');
-console.log(`rules.json v${out.version}: ${Object.keys(out.platforms).length} platforms, ${Object.keys(jsLibrary).length} js behaviours`);
+
+build('src/rules.base.json', 'rules.json', ['src/js']);
+build('src/desktop.base.json', 'desktop.json', ['src/js-desktop', 'src/js']);
