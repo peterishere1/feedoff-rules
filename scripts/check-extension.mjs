@@ -31,6 +31,8 @@ const ctx = await chromium.launchPersistentContext(userDir, {
   headless: false,
   args: ['--headless=new', `--disable-extensions-except=${ext}`, `--load-extension=${ext}`],
   viewport: { width: 1440, height: 900 }, locale: 'en-US',
+  // X answers the HeadlessChrome user agent with an error page; present as ordinary desktop Chrome.
+  userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
 });
 let failed = 0;
 for (const [id, steps] of Object.entries(PLAN)) {
