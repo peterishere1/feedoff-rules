@@ -19,6 +19,10 @@ block. It is bundled into the app as a fallback and fetched from
 - `build.mjs`: inlines the JS into `rules.json` and validates the file
 - `scripts/check-selectors.mjs`: nightly Playwright check that every selector still matches
 - `scripts/check-extension.mjs`: loads the built Chrome extension in Chromium and checks the desktop rules
+- `scripts/check-text.mjs`: applies the real filter engine to the logged-in Instagram feed and fails if posts that look suggested or sponsored stay visible (the label-based hides have no selector to test)
+- `scripts/lib/apply-rules.mjs`: applies FeedOff to a Playwright context the way the app does; `scripts/lib/runtime.js` is a generated copy of the engine
+- `scripts/probe-mobile.mjs`, `scripts/probe-tree.mjs`: structure-only census and outline of a mobile page for writing new selectors
+- `scripts/nightly-local.sh`: the launchd job; waits for the network, logs "skipped (offline)" instead of failing, retries once
 - `scripts/probe-desktop.mjs`: structure-only DOM census of a desktop page for writing new selectors
 
 ## Editing a rule

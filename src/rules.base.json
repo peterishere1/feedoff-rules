@@ -1,5 +1,5 @@
 {
-  "version": 21,
+  "version": 22,
   "minAppVersion": "1.0.0",
   "updatedAt": "2026-11-09",
   "platforms": {
@@ -154,6 +154,25 @@
                 "Gesponsord"
               ],
               "leaf": "span, a, div",
+              "placeholder": {
+                "title": "Ad hidden by FeedOff",
+                "body": ""
+              }
+            },
+            {
+              "selector": "article:not(:has(time))",
+              "exact": [
+                "Ad",
+                "Anuncio",
+                "Publicité",
+                "Anzeige",
+                "Anúncio",
+                "Inserzione",
+                "إعلان",
+                "Reklam",
+                "Advertentie"
+              ],
+              "leaf": "span",
               "placeholder": {
                 "title": "Ad hidden by FeedOff",
                 "body": ""
@@ -446,7 +465,30 @@
               "contains": [],
               "exact": [
                 "Ad",
-                "Promoted"
+                "Promoted",
+                "Anuncio",
+                "Promocionado",
+                "Publicité",
+                "Sponsorisé",
+                "Anzeige",
+                "Gesponsert",
+                "Anúncio",
+                "Promovido",
+                "Annuncio",
+                "Sponsorizzato",
+                "Advertentie",
+                "Gepromoot",
+                "Reklam",
+                "Sponsorlu",
+                "إعلان",
+                "مُروَّج",
+                "広告",
+                "プロモーション",
+                "광고",
+                "프로모션",
+                "Iklan",
+                "Dipromosikan",
+                "विज्ञापन"
               ],
               "leaf": "span",
               "placeholder": {
@@ -623,6 +665,7 @@
           "detail": "Removes suggested connections and follow prompts.",
           "default": true,
           "css": [
+            "html.feedoff-network [data-testid='lazy-column'] > div:not([componentkey]):has(> section[componentkey] [role='list']):not(:has([componentkey='pending-invitations-preview']))",
             ".discover-pymk",
             ".mn-pymk-list",
             "[data-view-name='pymk']",
@@ -638,6 +681,7 @@
           "detail": "Removes LinkedIn News and trending stories.",
           "default": true,
           "css": [
+            "html.feedoff-notifications [data-testid='lazy-column'] > div:has(a[href*='/news/'])",
             ".news-module",
             "#feed-news-module",
             "[data-view-name='news-module']",
@@ -670,6 +714,46 @@
                 "Suggested"
               ],
               "maxTextLength": 80
+            },
+            {
+              "selector": "[data-testid='mainFeed'] [role='listitem']",
+              "exact": [
+                "Promoted",
+                "Promocionado",
+                "Sponsorisé",
+                "Post sponsorisé",
+                "Anzeige",
+                "Gesponsert",
+                "Promovido",
+                "Patrocinado",
+                "Sponsorizzato",
+                "Post sponsorizzato",
+                "Gepromoot",
+                "Gesponsord",
+                "Sponsorlu",
+                "Tanıtılan",
+                "مُروَّج",
+                "ترويجي"
+              ],
+              "leaf": "span, p"
+            },
+            {
+              "selector": "[data-testid='mainFeed'] [role='listitem']",
+              "exact": [
+                "Suggested",
+                "Sugerencias",
+                "Sugerido",
+                "Suggestions",
+                "Suggéré",
+                "Vorgeschlagen",
+                "Sugestões",
+                "Suggerito",
+                "Suggerimenti",
+                "Voorgesteld",
+                "Önerilen",
+                "مقترح"
+              ],
+              "leaf": "span, p"
             }
           ]
         }
@@ -752,6 +836,74 @@
                 "Suggested Reels"
               ],
               "maxTextLength": 6000,
+              "placeholder": {
+                "title": "Suggested content hidden by FeedOff",
+                "body": ""
+              }
+            },
+            {
+              "selector": "[data-type='vscroller'] > div[data-dcm-id]",
+              "exact": [
+                "People you may know",
+                "Personas que quizá conozcas",
+                "Vous connaissez peut-être",
+                "Personnes que vous pourriez connaître",
+                "Personen, die du kennen könntest",
+                "Pessoas que talvez você conheça",
+                "Pessoas que talvez conheças",
+                "Persone che potresti conoscere",
+                "Mensen die je misschien kent",
+                "Tanıyor Olabileceğin Kişiler",
+                "أشخاص قد تعرفهم",
+                "Suggested for you",
+                "Sugerencias para ti",
+                "Suggestions pour vous",
+                "Suggéré pour vous",
+                "Vorschläge für dich",
+                "Sugestões para você",
+                "Sugestões para ti",
+                "Suggeriti per te",
+                "Voorgesteld voor jou",
+                "Senin için önerilenler",
+                "مقترحة لك",
+                "مقترح لك",
+                "Sponsored",
+                "Publicidad",
+                "Sponsorisé",
+                "Gesponsert",
+                "Patrocinado",
+                "Sponsorizzato",
+                "Gesponsord",
+                "Sponsorlu",
+                "مُموَّل",
+                "ممول",
+                "Suggested groups",
+                "Grupos sugeridos",
+                "Groupes suggérés",
+                "Vorgeschlagene Gruppen",
+                "Gruppi suggeriti",
+                "Voorgestelde groepen",
+                "Önerilen Gruplar",
+                "مجموعات مقترحة",
+                "Suggested pages",
+                "Páginas sugeridas",
+                "Pages suggérées",
+                "Vorgeschlagene Seiten",
+                "Pagine suggerite",
+                "Voorgestelde pagina's",
+                "Önerilen Sayfalar",
+                "صفحات مقترحة",
+                "Reels and short videos",
+                "Suggested reels",
+                "Reels y videos cortos",
+                "Reels et courtes vidéos",
+                "Reels und Kurzvideos",
+                "Reels e vídeos curtos",
+                "Reel e video brevi",
+                "Reels en korte video's",
+                "Reels ve kısa videolar"
+              ],
+              "leaf": "span",
               "placeholder": {
                 "title": "Suggested content hidden by FeedOff",
                 "body": ""

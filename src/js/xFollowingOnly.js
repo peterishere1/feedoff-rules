@@ -11,6 +11,15 @@
       var txt = (t.textContent || '').trim().toLowerCase();
       if (txt === 'for you') forYou = t; else if (txt === 'following') following = t;
     });
+    // Other languages: the Home timeline's first two tabs are always For you, then Following.
+    if (!forYou && !following) {
+      // The tab row sits in the top bar on phones and in the main column on desktop.
+      var lists = document.querySelectorAll('[role="tablist"]');
+      for (var i = 0; i < lists.length; i++) {
+        var own = lists[i].querySelectorAll('[role="tab"]');
+        if (own.length >= 2) { forYou = own[0]; following = own[1]; break; }
+      }
+    }
     return { forYou: forYou, following: following };
   }
   function check() {

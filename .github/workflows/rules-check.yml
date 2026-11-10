@@ -35,6 +35,10 @@ jobs:
           FEEDOFF_STATE_REDDIT: ${{ secrets.FEEDOFF_STATE_REDDIT }}
           FEEDOFF_STATE_LINKEDIN: ${{ secrets.FEEDOFF_STATE_LINKEDIN }}
         run: node scripts/check-selectors.mjs
+      - name: Check text-based hides on the logged-in feeds
+        env:
+          FEEDOFF_STATE_INSTAGRAM: ${{ secrets.FEEDOFF_STATE_INSTAGRAM }}
+        run: node scripts/check-text.mjs
       - name: Upload report
         if: always()
         uses: actions/upload-artifact@v4
@@ -50,4 +54,4 @@ jobs:
             const { data: open } = await github.rest.issues.listForRepo({ ...context.repo, state: 'open', labels: 'rules' });
             if (open.some(i => i.title.startsWith('Nightly rules check failed'))) return;
             await github.rest.issues.create({ ...context.repo, title, labels: ['rules'],
-              body: `A toggle has no live selector. See the run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}` });
+              body: `A toggle has no live selector, or suggested posts and ads are getting past the text-based hides. See the run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}` });

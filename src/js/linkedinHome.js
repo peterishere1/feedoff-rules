@@ -46,7 +46,15 @@
     }
     return true;
   }
+  // Mark the Network and Notifications pages so the suggestion and news rules stay scoped to them.
+  function markPath() {
+    var seg = location.pathname.split('/')[1] || '';
+    var root = document.documentElement;
+    root.classList.toggle('feedoff-network', seg === 'mynetwork');
+    root.classList.toggle('feedoff-notifications', seg === 'notifications');
+  }
   function apply() {
+    markPath();
     if (openPost() || backFromPost()) { document.documentElement.classList.add('feedoff-home'); return; }
     var home = on() && isHome();
     document.documentElement.classList.toggle('feedoff-home', home);
@@ -70,6 +78,7 @@
     }
   }
   openPost();
+  markPath();
   setTimeout(apply, 800);
   FO && FO.onSweep(apply);
   window.addEventListener('popstate', function () { setTimeout(apply, 50); });

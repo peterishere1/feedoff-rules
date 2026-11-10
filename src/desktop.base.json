@@ -1,7 +1,7 @@
 {
-  "version": 2,
+  "version": 3,
   "minExtensionVersion": "1.0.0",
-  "updatedAt": "2026-11-04",
+  "updatedAt": "2026-11-09",
   "platforms": {
     "youtube": {
       "name": "YouTube",
@@ -193,7 +193,30 @@
               "contains": [],
               "exact": [
                 "Ad",
-                "Promoted"
+                "Promoted",
+                "Anuncio",
+                "Promocionado",
+                "Publicité",
+                "Sponsorisé",
+                "Anzeige",
+                "Gesponsert",
+                "Anúncio",
+                "Promovido",
+                "Annuncio",
+                "Sponsorizzato",
+                "Advertentie",
+                "Gepromoot",
+                "Reklam",
+                "Sponsorlu",
+                "إعلان",
+                "مُروَّج",
+                "広告",
+                "プロモーション",
+                "광고",
+                "프로모션",
+                "Iklan",
+                "Dipromosikan",
+                "विज्ञापन"
               ],
               "leaf": "span",
               "placeholder": {

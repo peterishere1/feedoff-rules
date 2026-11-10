@@ -44,8 +44,13 @@ const PLAN = {
   },
   linkedin: {
     loginRequired: true,
-    // A new or quiet account may have no PYMK / news modules at all; absence is a warning, not a failure.
-    pages: [{ url: 'https://www.linkedin.com/feed/', toggles: ['pymk', 'news'], ready: 'main', optional: ['pymk', 'news'] }],
+    // Suggested connections live on the Network page and are always there. News arrives as a
+    // notification card only some days, and the feed modules only exist on the older markup,
+    // so those two are warnings, not failures.
+    pages: [
+      { url: 'https://www.linkedin.com/mynetwork/grow/', toggles: ['pymk'], ready: "[data-testid='lazy-column']" },
+      { url: 'https://www.linkedin.com/notifications/', toggles: ['news'], ready: 'main', optional: ['news'] },
+    ],
   },
 };
 
@@ -80,7 +85,10 @@ for (const [id, platform] of Object.entries(rules.platforms)) {
       if (!toggle) continue;
       for (const selector of toggle.css) {
         let count = -1;
-        try { count = await page.locator(selector).count(); } catch (e) { count = -1; }
+        // Some rules are scoped to a page by a class the app's own script sets (html.feedoff-explore …).
+        // That script isn't running here, so test the rest of the selector on the page it is meant for.
+        const live = selector.replace(/^html\.feedoff-[a-z-]+\s+/, '');
+        try { count = await page.locator(live).count(); } catch (e) { count = -1; }
         const optional = (step.optional || []).includes(toggleId);
         results.push({ platform: id, toggle: toggleId, selector, url: step.url, count, optional, status: count > 0 ? 'ok' : count === 0 ? 'nomatch' : 'invalid' });
       }
