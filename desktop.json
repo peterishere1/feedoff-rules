@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "minExtensionVersion": "1.0.0",
   "updatedAt": "2026-11-09",
   "platforms": {
@@ -250,12 +250,486 @@
       "js": [
         "xFollowingOnly"
       ]
+    },
+    "reddit": {
+      "name": "Reddit",
+      "home": "https://www.reddit.com/",
+      "hosts": [
+        "reddit.com"
+      ],
+      "redirects": [
+        {
+          "match": "^/r/(popular|all)(/|$)",
+          "to": "/",
+          "toggle": "homefeed"
+        },
+        {
+          "match": "^/best(/|$)",
+          "to": "/",
+          "toggle": "homefeed"
+        },
+        {
+          "match": "^/communities(/|$)",
+          "to": "/",
+          "toggle": "recommended"
+        }
+      ],
+      "allow": [],
+      "toggles": {
+        "homefeed": {
+          "label": "Hide Home & Popular feeds",
+          "detail": "The front page shows nothing to scroll. Communities you open directly still show their posts.",
+          "default": true,
+          "css": [
+            "html.feedoff-home shreddit-feed > *",
+            "html.feedoff-home shreddit-feed-page-loading",
+            "html.feedoff-home shreddit-sort-dropdown",
+            "html.feedoff-home [data-testid='feed-sort']",
+            "a[href='/r/popular/']",
+            "a[href='/r/all/']"
+          ]
+        },
+        "ads": {
+          "label": "Hide ads",
+          "detail": "Removes promoted posts from every feed and comment page.",
+          "default": true,
+          "css": [
+            "shreddit-ad-post",
+            "shreddit-comments-page-ad",
+            "shreddit-dynamic-ad-link",
+            "shreddit-post[promoted]",
+            "shreddit-post[promoted='true']",
+            "article:has(> shreddit-ad-post)",
+            "#right-rail-experience-root",
+            "shreddit-sidebar-ad"
+          ]
+        },
+        "recommended": {
+          "label": "Hide Popular Communities & Explore",
+          "detail": "Removes suggested communities, Explore, Reddit Answers and trending searches.",
+          "default": true,
+          "css": [
+            "community-highlight-carousel",
+            "shreddit-recirculation",
+            "shreddit-community-recommendations",
+            "[data-testid='community-recs']",
+            "a[href*='applink.reddit.com/answers']",
+            "a[href^='/answers']",
+            "reddit-search-small a[href*='answers']",
+            "shreddit-trending-searches",
+            "[data-testid='trending-searches']",
+            "aside[aria-label='Popular Communities']",
+            "a[href='/explore/']",
+            "aside[aria-label='Discover communities']",
+            "aside[aria-label]:has(community-card)"
+          ]
+        }
+      },
+      "js": [
+        "homeNoteDesktop"
+      ]
+    },
+    "instagram": {
+      "name": "Instagram",
+      "home": "https://www.instagram.com/",
+      "hosts": [
+        "instagram.com"
+      ],
+      "redirects": [
+        {
+          "match": "^/reels(/|$)",
+          "to": "/",
+          "toggle": "reels"
+        }
+      ],
+      "allow": [
+        {
+          "match": "^/reel/[A-Za-z0-9_-]+/?",
+          "note": "A single reel opened from a DM or profile stays watchable"
+        }
+      ],
+      "toggles": {
+        "reels": {
+          "label": "Hide Reels",
+          "detail": "Removes the Reels tab and the Reels feed. A reel someone sends you still plays.",
+          "default": true,
+          "css": [
+            "a[href='/reels/']",
+            "a[href^='/reels/']",
+            "svg[aria-label='Reels']",
+            "div[role='tablist'] a[href^='/reels']"
+          ]
+        },
+        "explore": {
+          "label": "Hide the Explore grid",
+          "detail": "Search stays. The grid of suggested posts under it is hidden.",
+          "default": true,
+          "css": [
+            "html.feedoff-explore main > div > div:not(:has(input))"
+          ]
+        },
+        "suggested": {
+          "label": "Hide suggested posts & ads",
+          "detail": "Removes 'Suggested for you' and sponsored posts from your feed, and the suggested accounts beside it.",
+          "default": true,
+          "css": [
+            "main div:has(> div > a[href='/explore/people/'])"
+          ],
+          "hideIfText": [
+            {
+              "selector": "article",
+              "contains": [
+                "Suggested for you",
+                "Sponsored",
+                "Suggested posts"
+              ],
+              "maxTextLength": 8000,
+              "placeholder": {
+                "title": "Suggested post hidden by FeedOff",
+                "body": "",
+                "end": "You're all caught up.\nEverything below this was suggested by Instagram, so FeedOff stopped here."
+              }
+            },
+            {
+              "selector": "article",
+              "exact": [
+                "Suggested posts",
+                "Publicaciones sugeridas",
+                "Posts suggérés",
+                "Vorgeschlagene Beiträge",
+                "Publicações sugeridas",
+                "Post suggeriti",
+                "منشورات مقترحة",
+                "Önerilen gönderiler",
+                "Voorgestelde berichten",
+                "You're all caught up",
+                "You’re all caught up",
+                "You're All Caught Up",
+                "You’re All Caught Up",
+                "Suggested Posts",
+                "Estás al día",
+                "Vous êtes à jour",
+                "Du bist auf dem neuesten Stand",
+                "Você está em dia",
+                "Sei aggiornato"
+              ],
+              "leaf": "span, h2, h3, h4, div",
+              "afterAll": true,
+              "placeholder": {
+                "title": "Suggested post hidden by FeedOff",
+                "body": ""
+              }
+            },
+            {
+              "selector": "article",
+              "exact": [
+                "Suggested for you",
+                "Sugerencias para ti",
+                "Suggestions pour vous",
+                "Vorschläge für dich",
+                "Sugestões para você",
+                "Suggeriti per te",
+                "مقترحة لك",
+                "مقترح لك",
+                "Senin için önerilenler",
+                "Voorgesteld voor jou"
+              ],
+              "leaf": "span, h2, h3, h4, div",
+              "placeholder": {
+                "title": "Suggested post hidden by FeedOff",
+                "body": ""
+              }
+            },
+            {
+              "selector": "article",
+              "exact": [
+                "Sponsored",
+                "Publicidad",
+                "Sponsorisé",
+                "Gesponsert",
+                "Patrocinado",
+                "Sponsorizzato",
+                "مُموَّل",
+                "ممول",
+                "Sponsorlu",
+                "Gesponsord"
+              ],
+              "leaf": "span, a, div",
+              "placeholder": {
+                "title": "Ad hidden by FeedOff",
+                "body": ""
+              }
+            },
+            {
+              "selector": "article:not(:has(time))",
+              "exact": [
+                "Ad",
+                "Anuncio",
+                "Publicité",
+                "Anzeige",
+                "Anúncio",
+                "Inserzione",
+                "إعلان",
+                "Reklam",
+                "Advertentie"
+              ],
+              "leaf": "span",
+              "placeholder": {
+                "title": "Ad hidden by FeedOff",
+                "body": ""
+              }
+            }
+          ]
+        },
+        "live": {
+          "label": "Hide Live",
+          "detail": "Removes the Live tab and live badges.",
+          "default": true,
+          "css": [
+            "a[href^='/live/']",
+            "svg[aria-label='Live']"
+          ]
+        },
+        "shop": {
+          "label": "Hide Shop",
+          "detail": "Removes shopping tabs and shop links.",
+          "default": true,
+          "css": [
+            "a[href^='/shop/']",
+            "svg[aria-label='Shop']"
+          ]
+        },
+        "ai": {
+          "label": "Hide AI-labelled posts",
+          "detail": "Removes posts Instagram marks as made or edited with AI. Off by default; Instagram only labels some of them.",
+          "default": false,
+          "css": [],
+          "hideIfText": [
+            {
+              "selector": "article",
+              "exact": [
+                "AI info",
+                "Made with AI",
+                "AI generated",
+                "Made with Meta AI",
+                "Created with AI",
+                "Hecho con IA",
+                "Créé avec l'IA",
+                "Mit KI erstellt",
+                "Feito com IA"
+              ],
+              "leaf": "span, a, div",
+              "placeholder": {
+                "title": "AI-labelled post hidden by FeedOff",
+                "body": ""
+              }
+            }
+          ]
+        },
+        "reposts": {
+          "label": "Hide reposts",
+          "detail": "Removes posts that someone you follow reposted rather than made. Off by default.",
+          "default": false,
+          "css": [],
+          "hideIfText": [
+            {
+              "selector": "article",
+              "exact": [
+                "Reposted",
+                "Repost",
+                "reposted",
+                "Reposted by",
+                "Republicado",
+                "Republié",
+                "Erneut gepostet"
+              ],
+              "leaf": "span, a, div",
+              "placeholder": {
+                "title": "Repost hidden by FeedOff",
+                "body": ""
+              }
+            }
+          ]
+        }
+      },
+      "js": [
+        "igExploreDesktop"
+      ]
+    },
+    "linkedin": {
+      "name": "LinkedIn",
+      "home": "https://www.linkedin.com/feed/",
+      "hosts": [
+        "linkedin.com"
+      ],
+      "redirects": [
+        {
+          "match": "^/news(/|$)",
+          "to": "/feed/",
+          "toggle": "news"
+        },
+        {
+          "match": "^/feed/hashtag",
+          "to": "/feed/",
+          "toggle": "homefeed"
+        }
+      ],
+      "allow": [],
+      "toggles": {
+        "homefeed": {
+          "label": "Hide Home feed",
+          "detail": "Home keeps the post box and your sidebar. The feed below it is hidden.",
+          "default": true,
+          "css": [
+            "html.feedoff-home [data-testid='mainFeed'] > div:not(:has([componentkey='shareboxProfilePictureComponentRef']))"
+          ]
+        },
+        "pymk": {
+          "label": "Hide People you may know",
+          "detail": "Removes suggested connections and follow prompts.",
+          "default": true,
+          "css": [
+            "html.feedoff-network [data-testid='lazy-column'] > div:not([componentkey]):has(> section[componentkey] [role='list']):not(:has([componentkey='pending-invitations-preview']))"
+          ],
+          "hideIfText": [
+            {
+              "selector": "[data-testid='mainFeed'] [role='listitem']",
+              "exact": [
+                "Recommended for you",
+                "People you may know",
+                "Recomendado para ti",
+                "Recommandé pour vous",
+                "Für Sie empfohlen",
+                "Recomendado para você",
+                "Consigliati per te",
+                "Aanbevolen voor u",
+                "Sizin için önerilenler",
+                "موصى به لك"
+              ],
+              "leaf": "span, p"
+            }
+          ]
+        },
+        "news": {
+          "label": "Hide news & games",
+          "detail": "Removes LinkedIn News and the puzzle games beside the feed, and news cards in Notifications.",
+          "default": true,
+          "css": [
+            "main aside > div > div > div:has(a[href*='/news/'])",
+            "main aside > div > div > div:has([componentkey='feedRightNavGamesComponentRef'])",
+            "html.feedoff-notifications [data-testid='lazy-column'] > div:has(a[href*='/news/'])"
+          ]
+        },
+        "ads": {
+          "label": "Hide ads & suggested posts",
+          "detail": "Removes sponsored content and posts LinkedIn suggests from people you don't follow.",
+          "default": true,
+          "css": [
+            "div:has(> iframe[componentkey='MainFeedDesktopNav_feed_ad'])"
+          ],
+          "hideIfText": [
+            {
+              "selector": "[data-testid='mainFeed'] [role='listitem']",
+              "exact": [
+                "Promoted",
+                "Promocionado",
+                "Sponsorisé",
+                "Post sponsorisé",
+                "Anzeige",
+                "Gesponsert",
+                "Promovido",
+                "Patrocinado",
+                "Sponsorizzato",
+                "Post sponsorizzato",
+                "Gepromoot",
+                "Gesponsord",
+                "Sponsorlu",
+                "Tanıtılan",
+                "مُروَّج",
+                "ترويجي"
+              ],
+              "leaf": "span, p"
+            },
+            {
+              "selector": "[data-testid='mainFeed'] [role='listitem']",
+              "exact": [
+                "Suggested",
+                "Sugerencias",
+                "Sugerido",
+                "Suggestions",
+                "Suggéré",
+                "Vorgeschlagen",
+                "Sugestões",
+                "Suggerito",
+                "Suggerimenti",
+                "Voorgesteld",
+                "Önerilen",
+                "مقترح"
+              ],
+              "leaf": "span, p"
+            }
+          ]
+        }
+      },
+      "js": [
+        "linkedinHome"
+      ]
+    },
+    "facebook": {
+      "name": "Facebook",
+      "home": "https://www.facebook.com/",
+      "hosts": [
+        "facebook.com"
+      ],
+      "redirects": [
+        {
+          "match": "^/reel(s)?(/|$)",
+          "to": "/",
+          "toggle": "reels"
+        },
+        {
+          "match": "^/watch(/|$)",
+          "to": "/",
+          "toggle": "reels"
+        }
+      ],
+      "allow": [
+        {
+          "match": "^/reel/[0-9]+",
+          "note": "A single reel someone sent you stays watchable"
+        }
+      ],
+      "toggles": {
+        "homefeed": {
+          "label": "Hide News Feed",
+          "detail": "Home keeps the post box and stories, with nothing to scroll. Groups, Marketplace, messages, events and profiles still work.",
+          "default": true,
+          "css": [
+            "html.feedoff-home [role='main'] div:has(> h3:first-child + div) > *"
+          ]
+        },
+        "reels": {
+          "label": "Hide Reels",
+          "detail": "Removes the Reels tab. A reel someone sends you still plays.",
+          "default": true,
+          "css": [
+            "[role='navigation'] li:has(a[href*='/reel/'])",
+            "[role='navigation'] a[href*='/reel/']"
+          ]
+        }
+      },
+      "js": [
+        "homeNoteDesktop"
+      ]
     }
   },
   "jsLibrary": {
+    "linkedinHome": "// LinkedIn (desktop): mark the Home feed page so its CSS can hide the feed. The post box and both\n// sidebars stay, so no hint is drawn over the page.\n// A post opened from a notification goes to its own page, so it still opens with the feed hidden.\n(function () {\n  if (!/linkedin\\.com$/.test(location.hostname)) return;\n  var FO = window.__feedoff;\n  function on() { return !FO || !FO.enabled || FO.enabled.indexOf('homefeed') !== -1; }\n  function isHome() { return /^\\/(feed\\/?|)$/.test(location.pathname) || /^\\/feed\\/(update|hashtag)?\\/?$/.test(location.pathname); }\n  // Notifications link to the feed with one post pinned on top (/feed/?highlightedUpdateUrn=...).\n  // With the feed hidden that would be a blank page, so open the post on its own page instead.\n  var sent = '';\n  function urnFrom(pathname, search) {\n    if (!/^\\/feed\\/?$/.test(pathname)) return null;\n    var m = /[?&]highlightedUpdateUrns?=([^&#]+)/.exec(search || '');\n    if (!m) return null;\n    var urn; try { urn = decodeURIComponent(m[1]); } catch (e) { return null; }\n    urn = urn.replace(/^[(\\[]+/, '').split(',')[0];\n    return /^urn:li:(activity|ugcPost|share):[0-9]+$/.test(urn) ? urn : null;\n  }\n  function openPost() {\n    if (!on()) return false;\n    var urn = urnFrom(location.pathname, location.search);\n    if (!urn) return false;\n    if (sent !== urn) { sent = urn; mark(urn); location.replace('/feed/update/' + urn + '/'); }\n    return true;\n  }\n  // LinkedIn's post page puts the Home feed behind itself in history, so Back from a post opened\n  // this way would land on the hidden feed. Remember the post and send that Back to Notifications.\n  var KEY = '__feedoff_li_post', bouncing = false;\n  function mark(urn) { try { sessionStorage.setItem(KEY, urn); } catch (e) {} }\n  function marked() { try { return sessionStorage.getItem(KEY); } catch (e) { return null; } }\n  function unmark() { try { sessionStorage.removeItem(KEY); } catch (e) {} }\n  function backFromPost() {\n    var m = marked();\n    if (!m) return false;\n    var path; try { path = decodeURIComponent(location.pathname); } catch (e) { path = location.pathname; }\n    if (path.indexOf('/feed/update/' + m) === 0) return false;\n    if (!on() || !isHome()) { unmark(); return false; }\n    if (!bouncing) {\n      bouncing = true;\n      // Re-check after a beat: the post page passes through \"/\" while it sets up its history.\n      setTimeout(function () {\n        bouncing = false;\n        if (marked() && isHome() && !urnFrom(location.pathname, location.search)) { unmark(); location.replace('/notifications/'); }\n      }, 350);\n    }\n    return true;\n  }\n  // Mark the Network and Notifications pages so the suggestion and news rules stay scoped to them.\n  function markPath() {\n    var seg = location.pathname.split('/')[1] || '';\n    var root = document.documentElement;\n    root.classList.toggle('feedoff-network', seg === 'mynetwork');\n    root.classList.toggle('feedoff-notifications', seg === 'notifications');\n  }\n  function apply() {\n    markPath();\n    if (openPost() || backFromPost()) { document.documentElement.classList.add('feedoff-home'); return; }\n    var home = on() && isHome();\n    document.documentElement.classList.toggle('feedoff-home', home);\n  }\n  openPost();\n  markPath();\n  setTimeout(apply, 800);\n  FO && FO.onSweep(apply);\n  window.addEventListener('popstate', function () { setTimeout(apply, 50); });\n})();\n",
     "noAutoplayNext": "// YouTube desktop: pause when a video ends and keep the Autoplay toggle off.\n(function () {\n  if (!/youtube\\.com$/.test(location.hostname)) return;\n  function killAutonav() {\n    document.querySelectorAll('.ytp-autonav-toggle-button[aria-checked=\"true\"]').forEach((b) => { try { b.click(); } catch (_) {} });\n  }\n  function hook(video) {\n    if (video.__foHooked) return;\n    video.__foHooked = true;\n    video.addEventListener('ended', () => { try { video.pause(); } catch (_) {} killAutonav(); });\n  }\n  function sweep() { document.querySelectorAll('video').forEach(hook); killAutonav(); }\n  window.__feedoff && window.__feedoff.onSweep(sweep);\n  sweep();\n})();\n",
     "xFollowingOnly": "// X: open Home on \"Following\", hide the \"For you\" tab, and mark the Explore page for CSS scoping.\n(function () {\n  if (!/(^|\\.)x\\.com$|twitter\\.com$/.test(location.hostname)) return;\n  var FO = window.__feedoff;\n  function on() { return !FO || !FO.enabled || FO.enabled.indexOf('foryou') !== -1; }\n  var last = 0;\n  function tabs() {\n    var all = document.querySelectorAll('[role=\"tab\"]');\n    var forYou = null, following = null;\n    all.forEach(function (t) {\n      var txt = (t.textContent || '').trim().toLowerCase();\n      if (txt === 'for you') forYou = t; else if (txt === 'following') following = t;\n    });\n    // Other languages: the Home timeline's first two tabs are always For you, then Following.\n    if (!forYou && !following) {\n      // The tab row sits in the top bar on phones and in the main column on desktop.\n      var lists = document.querySelectorAll('[role=\"tablist\"]');\n      for (var i = 0; i < lists.length; i++) {\n        var own = lists[i].querySelectorAll('[role=\"tab\"]');\n        if (own.length >= 2) { forYou = own[0]; following = own[1]; break; }\n      }\n    }\n    return { forYou: forYou, following: following };\n  }\n  function check() {\n    document.documentElement.classList.toggle('feedoff-explore', /^\\/explore/.test(location.pathname));\n    if (!on() || !/^\\/home\\/?$/.test(location.pathname)) return;\n    var t = tabs(); if (!t.forYou || !t.following) return;\n    if (t.forYou.getAttribute('aria-selected') === 'true') {\n      var now = Date.now(); if (now - last < 1500) return; last = now;\n      try { t.following.click(); } catch (e) {}\n    }\n    t.forYou.style.setProperty('display', 'none', 'important');\n  }\n  setTimeout(check, 1200);\n  FO && FO.onSweep(check);\n  window.addEventListener('popstate', function () { setTimeout(check, 100); });\n})();\n",
     "ytAdSkip": "// YouTube: if an ad still plays, mute it and jump to its end; click Skip/close when offered.\n(function () {\n  if (!/youtube\\.com$/.test(location.hostname)) return;\n  var FO = window.__feedoff;\n  function on() { return !FO || !FO.enabled || FO.enabled.indexOf('ads') !== -1; }\n  var wasMuted = null;\n  function tick() {\n    if (!on()) return;\n    var ad = document.querySelector('.ad-showing, .ad-interrupting, .ytp-ad-player-overlay, ytm-player-ad-overlay, .ytp-ad-preview-container');\n    var v = document.querySelector('video');\n    if (ad && v) {\n      if (wasMuted === null) wasMuted = v.muted;\n      v.muted = true;\n      if (isFinite(v.duration) && v.duration > 0) { try { v.currentTime = v.duration; } catch (e) {} }\n      try { v.playbackRate = 16; } catch (e) {}\n    } else if (v && wasMuted !== null) {\n      v.muted = wasMuted; wasMuted = null;\n      try { if (v.playbackRate === 16) v.playbackRate = 1; } catch (e) {}\n    }\n    var skip = document.querySelector('.ytp-ad-skip-button, .ytp-ad-skip-button-modern, .ytp-skip-ad-button, button.ytm-skip-ad-button, [class*=\"skip-button\"], [id*=\"skip-button\"]');\n    if (skip) { try { skip.click(); } catch (e) {} }\n    var close = document.querySelector('.ytp-ad-overlay-close-button, .ytm-ad-overlay-close');\n    if (close) { try { close.click(); } catch (e) {} }\n  }\n  setInterval(tick, 400);\n  FO && FO.onSweep(tick);\n})();\n",
+    "homeNoteDesktop": "// Desktop Reddit / Facebook: mark the home page so the CSS can empty its feed, and leave a short\n// note where the feed was. The note is drawn by the engine's own placeholder style, so nothing is\n// inserted into the page (these sites re-render their trees and trip over foreign nodes).\n(function () {\n  var FO = window.__feedoff;\n  var host = location.hostname.replace(/^www\\./, '');\n  var SITES = {\n    'reddit.com': { home: /^\\/(r\\/(popular|all)\\/?|best\\/?)?$/, anchor: 'shreddit-feed', note: 'Home feed hidden by FeedOff.\\nPick a community from the sidebar, or search for one.' },\n    'facebook.com': { home: /^\\/(home\\.php)?$/, anchor: \"[role='main'] div:has(> h3:first-child + div)\", note: 'News Feed hidden by FeedOff.\\nGroups, Marketplace, messages and events work as usual.' }\n  };\n  var site = SITES[host];\n  if (!site) return;\n  var ATTRS = ['data-feedoff-homenote', 'data-feedoff-after', 'data-feedoff-hidden', 'data-feedoff-note'];\n  function on() { return !FO || !FO.enabled || FO.enabled.indexOf('homefeed') !== -1; }\n  function clear(el) { ATTRS.forEach(function (a) { el.removeAttribute(a); }); }\n  function apply() {\n    var home = on() && site.home.test(location.pathname);\n    document.documentElement.classList.toggle('feedoff-home', home);\n    var marked = document.querySelectorAll('[data-feedoff-homenote]');\n    if (!home) { marked.forEach(clear); return; }\n    var el = null; try { el = document.querySelector(site.anchor); } catch (e) {}\n    marked.forEach(function (m) { if (m !== el) clear(m); });\n    if (el && (el.getAttribute('data-feedoff-hidden') !== 'end' || !el.hasAttribute('data-feedoff-homenote'))) {\n      el.setAttribute('data-feedoff-homenote', '1');\n      el.setAttribute('data-feedoff-after', '1');\n      el.setAttribute('data-feedoff-hidden', 'end');\n      el.setAttribute('data-feedoff-note', site.note);\n    }\n  }\n  apply();\n  setTimeout(apply, 800);\n  FO && FO.onSweep(apply);\n  window.addEventListener('popstate', function () { setTimeout(apply, 50); });\n})();\n",
+    "igExploreDesktop": "// Instagram (desktop): Search lives on the Explore page, so that page has to stay. Mark it so the\n// CSS can hide the grid of suggested posts under the search box.\n(function () {\n  if (!/instagram\\.com$/.test(location.hostname)) return;\n  var FO = window.__feedoff;\n  function check() { document.documentElement.classList.toggle('feedoff-explore', /^\\/explore\\/?$/.test(location.pathname)); }\n  check();\n  setTimeout(check, 800);\n  FO && FO.onSweep(check);\n  window.addEventListener('popstate', function () { setTimeout(check, 50); });\n})();\n",
     "ytHomeDesktop": "// YouTube desktop: when the Home feed is hidden, show a small card on / pointing to Subscriptions\n// (the redirect handles most visits; this covers in-page navigation back to the logo).\n(function () {\n  if (!/youtube\\.com$/.test(location.hostname)) return;\n  var FO = window.__feedoff;\n  var ID = '__feedoff_yt_home_hint';\n  function on() { return !FO || !FO.enabled || FO.enabled.indexOf('homefeed') !== -1; }\n  function check() {\n    var onHome = location.pathname === '/' && on();\n    document.documentElement.classList.toggle('feedoff-home', onHome);\n    var box = document.getElementById(ID);\n    if (!onHome) { if (box) box.remove(); return; }\n    if (box) return;\n    box = document.createElement('div'); box.id = ID;\n    box.style.cssText = 'position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);max-width:420px;padding:26px 28px;border-radius:18px;background:rgba(127,127,127,.12);text-align:center;font:15px/1.45 system-ui,sans-serif;color:inherit;z-index:2147483000;';\n    var t = document.createElement('div'); t.style.cssText = 'font-weight:700;font-size:18px;margin-bottom:6px;'; t.textContent = 'Home feed hidden';\n    var s = document.createElement('div'); s.style.cssText = 'opacity:.75;margin-bottom:16px;'; s.textContent = 'FeedOff keeps YouTube to what you follow and what you search for.';\n    var a = document.createElement('a'); a.href = '/feed/subscriptions'; a.textContent = 'Go to Subscriptions';\n    a.style.cssText = 'display:inline-block;padding:10px 22px;border-radius:999px;background:#FF6B4A;color:#fff;font-weight:600;text-decoration:none;';\n    box.appendChild(t); box.appendChild(s); box.appendChild(a);\n    document.body.appendChild(box);\n  }\n  setTimeout(check, 500);\n  FO && FO.onSweep(check);\n  window.addEventListener('popstate', function () { setTimeout(check, 100); });\n})();\n"
   }
 }

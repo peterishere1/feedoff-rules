@@ -12,6 +12,14 @@ cd "$(dirname "$0")/.."
 export PATH="$HOME/.nvm/versions/node/$(ls "$HOME/.nvm/versions/node" | sort -V | tail -1)/bin:$PATH"
 mkdir -p report
 
+# One run at a time: a manual run and the scheduled one would write over each other's log.
+LOCK=report/.nightly.lock
+if ! mkdir "$LOCK" 2>/dev/null; then
+  # A lock older than two hours is left over from a run that was killed.
+  if [ -n "$(find "$LOCK" -maxdepth 0 -mmin +120 2>/dev/null)" ]; then rmdir "$LOCK" 2>/dev/null; mkdir "$LOCK" 2>/dev/null || exit 0; else exit 0; fi
+fi
+trap 'rmdir "$LOCK" 2>/dev/null' EXIT
+
 online() { curl -fsS -o /dev/null --max-time 8 https://feedoff.app/v1/rules.json 2>/dev/null; }
 # Wait up to WAIT seconds (default 5 minutes) for the network to come up.
 wait_online() {

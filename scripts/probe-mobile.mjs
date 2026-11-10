@@ -2,7 +2,7 @@
 // Mobile DOM probe for the iPhone rules (WebKit, iPhone profile). Structure only: prints
 // attribute/tag counts and short UI headings, never post text, names or screenshots.
 // Usage: node scripts/probe-mobile.mjs <url> [selector ...]   (session read from .state/<platform>.json)
-import { webkit, devices } from 'playwright';
+import { webkit, chromium, devices } from 'playwright';
 import { readFileSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -10,8 +10,11 @@ const here = dirname(fileURLToPath(import.meta.url));
 const [url, ...sels] = process.argv.slice(2);
 const id = ['instagram', 'youtube', 'x', 'reddit', 'linkedin', 'facebook'].find((p) => new URL(url).hostname.includes(p === 'x' ? 'x.com' : p));
 const stateFile = join(here, `../.state/${id}.json`);
-const browser = await webkit.launch();
-const ctx = await browser.newContext({ ...devices['iPhone 14'], locale: process.env.LOCALE || 'en-US', storageState: existsSync(stateFile) ? JSON.parse(readFileSync(stateFile, 'utf8')) : undefined });
+// DESKTOP=1 probes the desktop site in Chromium (for the Chrome extension rules).
+const desktop = !!process.env.DESKTOP;
+const browser = await (desktop ? chromium.launch({ args: ['--headless=new'], headless: false }) : webkit.launch());
+const profile = desktop ? { viewport: { width: 1440, height: 900 }, userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36' } : devices['iPhone 14'];
+const ctx = await browser.newContext({ ...profile, locale: process.env.LOCALE || 'en-US', storageState: existsSync(stateFile) ? JSON.parse(readFileSync(stateFile, 'utf8')) : undefined });
 const page = await ctx.newPage();
 await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 }).catch((e) => console.error('goto:', e.message));
 await page.waitForTimeout(Number(process.env.WAIT || 6000));

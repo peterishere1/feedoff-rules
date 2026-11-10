@@ -21,7 +21,8 @@ block. It is bundled into the app as a fallback and fetched from
 - `scripts/check-extension.mjs`: loads the built Chrome extension in Chromium and checks the desktop rules
 - `scripts/check-text.mjs`: applies the real filter engine to the logged-in Instagram feed and fails if posts that look suggested or sponsored stay visible (the label-based hides have no selector to test)
 - `scripts/lib/apply-rules.mjs`: applies FeedOff to a Playwright context the way the app does; `scripts/lib/runtime.js` is a generated copy of the engine
-- `scripts/probe-mobile.mjs`, `scripts/probe-tree.mjs`: structure-only census and outline of a mobile page for writing new selectors
+- `scripts/probe-mobile.mjs`, `scripts/probe-tree.mjs`: structure-only census and outline of a mobile page for writing new selectors (`DESKTOP=1` for the desktop site)
+- `scripts/probe-chain.mjs`: ancestor chain with sizes for the first match of each selector on a desktop page
 - `scripts/nightly-local.sh`: the launchd job; waits for the network, logs "skipped (offline)" instead of failing, retries once
 - `scripts/probe-desktop.mjs`: structure-only DOM census of a desktop page for writing new selectors
 
