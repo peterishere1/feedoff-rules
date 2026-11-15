@@ -1,7 +1,7 @@
 {
-  "version": 22,
+  "version": 23,
   "minAppVersion": "1.0.0",
-  "updatedAt": "2026-11-09",
+  "updatedAt": "2026-11-15",
   "platforms": {
     "instagram": {
       "name": "Instagram",
@@ -19,7 +19,7 @@
           "toggle": "reels"
         },
         {
-          "match": "^/explore(/|$)",
+          "match": "^/explore/people(/|$)",
           "to": "/",
           "toggle": "explore"
         }
@@ -59,14 +59,12 @@
           ]
         },
         "explore": {
-          "label": "Hide Explore",
-          "detail": "Removes the Explore tab and its grid of suggested posts.",
+          "label": "Hide the Explore grid",
+          "detail": "Search stays. The grid of suggested posts under it is hidden.",
           "default": true,
           "css": [
-            "a[href='/explore/']",
-            "a[href^='/explore/']",
-            "svg[aria-label='Explore']",
-            "svg[aria-label='Search and explore']"
+            "html.feedoff-explore main > nav ~ div",
+            "a[href^='/explore/people']"
           ]
         },
         "suggested": {
@@ -253,8 +251,10 @@
       },
       "js": [
         "oneVideoOnly",
+        "igReelLock",
         "killInstallBanner",
-        "igHomeFeed"
+        "igHomeFeed",
+        "igExplore"
       ]
     },
     "youtube": {

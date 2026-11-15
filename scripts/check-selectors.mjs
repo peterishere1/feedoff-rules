@@ -16,7 +16,11 @@ const rules = JSON.parse(readFileSync(join(here, '../rules.json'), 'utf8'));
 const PLAN = {
   instagram: {
     loginRequired: true,
-    pages: [{ url: 'https://www.instagram.com/', toggles: ['reels', 'explore', 'suggested'], ready: 'article' }],
+    pages: [
+      { url: 'https://www.instagram.com/', toggles: ['reels', 'suggested'], ready: 'article' },
+      // Explore keeps its search box; only the grid under it is hidden.
+      { url: 'https://www.instagram.com/explore/', toggles: ['explore'], ready: 'main input' },
+    ],
   },
   youtube: {
     loginRequired: false,
