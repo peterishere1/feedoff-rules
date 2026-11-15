@@ -1,5 +1,5 @@
 {
-  "version": 23,
+  "version": 24,
   "minAppVersion": "1.0.0",
   "updatedAt": "2026-11-15",
   "platforms": {
@@ -252,6 +252,7 @@
       "js": [
         "oneVideoOnly",
         "igReelLock",
+        "igViewerFit",
         "killInstallBanner",
         "igHomeFeed",
         "igExplore"
