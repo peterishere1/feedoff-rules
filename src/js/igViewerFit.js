@@ -17,9 +17,11 @@
   }
   function fit() {
     var vw = innerWidth, vh = innerHeight;
-    var vids = document.querySelectorAll('video');
-    for (var i = 0; i < vids.length && i < 6; i++) {
+    // Start from the video, or from the still image shown while the video is loading.
+    var vids = document.querySelectorAll('video, img, canvas');
+    for (var i = 0, seen = 0; i < vids.length && seen < 6; i++) {
       if (vids[i].getBoundingClientRect().height < vh * 0.5) continue;
+      seen++;
       for (var n = vids[i]; n && n !== document.body && n !== document.documentElement; n = n.parentElement) {
         if (n.getAttribute('data-feedoff-fit') === '1') continue;
         var r = n.getBoundingClientRect();
@@ -34,7 +36,7 @@
   }
   fit();
   setTimeout(fit, 800);
-  setInterval(fit, 300);
+  setInterval(fit, 150);
   FO && FO.onSweep(fit);
   window.addEventListener('resize', function () { setTimeout(fit, 100); });
 })();
